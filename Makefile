@@ -1,6 +1,7 @@
-FLAGS := -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
-CPP_FILES_GEN := parser.cpp tokens.cpp
-CPP_FILES := $(CPP_FILES_GEN) main.cpp codeGen.cpp
+CPPFLAGS =-std=c++11
+
+OBJ_FILES_GEN := parser.o tokens.o
+OBJ_FILES := $(OBJ_FILES_GEN) main.o print_funcs.o
 
 all: parser
 
@@ -12,9 +13,12 @@ parser.hpp: parser.cpp
 tokens.cpp: tokens.l parser.hpp
 	lex -o $@ $<
 
-parser: $(CPP_FILES)
-	g++ -o $@ $(FLAGS) $(CPP_FILES)
+%.o: %.cpp
+	g++ -c $(CPPFLAGS) -o $@ $<
+
+parser: $(OBJ_FILES)
+	g++ -o $@ $(OBJ_FILES)
 
 clean:
-	rm $(CPP_FILES_GEN) parser.hpp
+	rm -rf $(OBJ_FILES_GEN) tokens.cpp parser.cpp parser.hpp *.o *~ parser
 

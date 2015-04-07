@@ -5,9 +5,10 @@
 	NBlock *programBlock;
 
 	extern int yylex();
-	void yyerror(const char *s){std::printf("ERROR: %s\n", s); std::exit(1);}
+	void yyerror(const char *s){std::printf("[ERROR] %s\n", s); std::exit(1);}
 %}
 
+//Define what is what
 %union{
 	Node *node;
 	NBlock *block;
@@ -21,11 +22,13 @@
 	int token;
 }
 
+//Lexemes from lex
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV
 
+//Type of each token
 %type <ident> ident
 %type <expr> numeric expr
 %type <varvec> func_decl_args
