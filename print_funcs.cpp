@@ -2,75 +2,85 @@
 
 using namespace std;
 
-void NInteger::print(){
+void do_indentation(int ind){
+	cout<<ind<<"|";
+	for(int i=0;i<ind;i++)
+		cout<<"\t";
+}
+
+void Node::print(int ind){
+	do_indentation(ind);
+	cout<<"Generic node\n";
+}
+
+void NInteger::print(int ind){
+	do_indentation(ind);
 	cout<<"INTEGER:  "<<value<<endl;
 }
 
-void NDouble::print(){
+void NDouble::print(int ind){
+	do_indentation(ind);
 	cout<<"DOUBLE:  "<<value<<endl;
 }
 
-void NIdentifier::print(){
+void NIdentifier::print(int ind){
+	do_indentation(ind);
 	cout<<"IDENTIFIER:  "<<name<<endl;
 }
 
-void NMethodCall::print(){
+void NMethodCall::print(int ind){
+	do_indentation(ind);
 	cout<<"METHOD CALL: "<<endl;
-	cout<<"\t";
-	id.print();
-	for(int i=0;i<arguments.size();i++){
-		cout<<"\t";
-		arguments[i]->print();
-	}
+	id.print(ind+1);
+	for(int i=0;i<arguments.size();i++)
+		arguments[i]->print(ind+1);
 }
 
-void NBinaryOperator::print(){
-	cout<<"BINARY OP: "<<op<<"\n\t";
-	left.print();
-	cout<<"\t";
-	right.print();
+void NBinaryOperator::print(int ind){
+	do_indentation(ind);
+	cout<<"BINARY OP: "<<op<<"\n";
+	left.print(ind+1);
+	right.print(ind+1);
 }
 
-void NAssignment::print(){
-	cout<<"ASSIGNMENT: "<<"\n\t";
-	left.print();
-	cout<<"\t";
-	right.print();
+void NAssignment::print(int ind){
+	do_indentation(ind);
+	cout<<"ASSIGNMENT: \n";
+	left.print(ind+1);
+	right.print(ind+1);
 }
 
-void NBlock::print(){
-	cout<<"CODE BLOCK: "<<endl;
+void NBlock::print(int ind){
+	do_indentation(ind);
+	cout<<"CODE BLOCK: "<<statements.size()<<" statements\n";
 	for(int i=0;i<statements.size();i++){
-		cout<<"\t";
-		statements[i]->print();
+		statements[i]->print(ind+1);
+		if(i!=statements.size()-1) cout<<endl;
 	}
 }
 
-void NExpressionStatement::print(){
-	expression.print();
+void NExpressionStatement::print(int ind){
+	do_indentation(ind);
+	cout<<"EXPRESSION\n";
+	expression.print(ind+1);
 }
 
-void NVariableDeclaration::print(){
-	cout<<"VARIABLE DECLARTION\n";
-	cout<<"\t";
-	type.print();
-	cout<<"\t";
-	id.print();
-	cout<<"\t";
-	assignmentExpr->print();
+void NVariableDeclaration::print(int ind){
+	do_indentation(ind);
+	cout<<"VARIABLE DECLARATION\n";
+	type.print(ind+1);
+	id.print(ind+1);
+	//If it has an expression assigned, print it
+	if(assignmentExpr!=NULL)
+		assignmentExpr->print(ind+1);
 }
 
-void NFunctionDeclaration::print(){
-	cout<<"FUNCTION DECLARTION\n";
-	cout<<"\t";
-	type.print();
-	cout<<"\t";
-	id.print();
-	cout<<"\t";
-	for(int i=0;i<arguments.size();i++){
-		cout<<"\t";
-		arguments[i]->print();
-	}
-	cout<<"\t";
-	block.print();
+void NFunctionDeclaration::print(int ind){
+	do_indentation(ind);
+	cout<<"FUNCTION DECLARTION: "<<arguments.size()<<" arguments\n";
+	type.print(ind+1);
+	id.print(ind+1);
+	for(int i=0;i<arguments.size();i++)
+		arguments[i]->print(ind+1);
+	block.print(ind+1);
 }
