@@ -27,6 +27,8 @@
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV
+%token <token> TSEMI
+%token <token> TIF TELSE
 
 //Type of each token
 %type <ident> ident
@@ -34,7 +36,7 @@
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> program stmts block
-%type <stmt> stmt var_decl func_decl
+%type <stmt> stmt var_decl func_decl if_stmt
 %type <token> comparison
 
 %left TPLUS TMINUS
@@ -51,12 +53,16 @@ stmts	: stmt {$$=new NBlock(); $$->statements.push_back($<stmt>1);}
 	| stmts stmt {$1->statements.push_back($<stmt>2);}
 	;
 
-stmt	: var_decl | func_decl
-	| expr {$$=new NExpressionStatement(*$1);}
+stmt	: var_decl TSEMI | func_decl | if_stmt
+	| expr TSEMI {$$=new NExpressionStatement(*$1);}
 	;
 
 block	: TLBRACE stmts TRBRACE {$$=$2;}
 	| TLBRACE TRBRACE {$$=new NBlock();}
+	;
+
+if_stmt	: TIF TLPAREN expr TRPAREN block {$$=new NIfStatement(*$3, *$5);}
+	| TIF TLPAREN expr TRPAREN block TELSE block {$$=new NIfStatement(*$3, *$5, $7);}
 	;
 
 var_decl : ident ident {$$=new NVariableDeclaration(*$1, *$2);}

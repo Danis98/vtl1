@@ -77,10 +77,20 @@ void NVariableDeclaration::print(int ind){
 
 void NFunctionDeclaration::print(int ind){
 	do_indentation(ind);
-	cout<<"FUNCTION DECLARTION: "<<arguments.size()<<" arguments\n";
+	cout<<"FUNCTION DECLARATION: "<<arguments.size()<<" arguments\n";
 	type.print(ind+1);
 	id.print(ind+1);
 	for(int i=0;i<arguments.size();i++)
 		arguments[i]->print(ind+1);
 	block.print(ind+1);
+}
+
+void NIfStatement::print(int ind){
+	do_indentation(ind);
+	cout<<"IF-ELSE STATEMENT:\n";
+	condition.print(ind+1);
+	ifBlock.print(ind+1);
+	if(hasElse){
+		elseBlock->print(ind+1);
+	}
 }

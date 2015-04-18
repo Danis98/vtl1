@@ -1,3 +1,6 @@
+#ifndef _NODE_H
+#define _NODE_H
+
 #include <iostream>
 #include <vector>
 
@@ -102,10 +105,11 @@ public:
 	NIdentifier& type;
 	NIdentifier& id;
 	NExpression *assignmentExpr;
+	bool hasExpr=false;
 	NVariableDeclaration(NIdentifier& type, NIdentifier& id) :
         type(type), id(id) { }
 	NVariableDeclaration(NIdentifier& type, NIdentifier& id, NExpression *assignmentExpr) :
-				type(type), id(id), assignmentExpr(assignmentExpr) { }
+				type(type), id(id), assignmentExpr(assignmentExpr) {hasExpr=true;}
 	void print(int ind);
 	//virtual llvm::Value* codeGen(CodeGenContext& context);
 };
@@ -122,3 +126,18 @@ public:
 	void print(int ind);
 	//virtual llvm::Value* codeGen(CodeGenContext& context);
 };
+
+class NIfStatement : public NStatement{
+public:
+	NExpression& condition;
+	NBlock& ifBlock;
+	NBlock *elseBlock;
+	bool hasElse=false;
+	NIfStatement (NExpression& condition, NBlock& ifBlock) : 
+		condition(condition), ifBlock(ifBlock){}
+	NIfStatement (NExpression& condition, NBlock& ifBlock, NBlock *elseBlock) : 
+		condition(condition), ifBlock(ifBlock), elseBlock(elseBlock){hasElse=true;}
+	void print(int ind);
+};
+
+#endif
