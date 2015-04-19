@@ -89,8 +89,7 @@ expr	: ident TEQUAL expr {$$=new NAssignment(*$<ident>1, *$3);}
 	| ident TLPAREN call_args TRPAREN {$$=new NMethodCall(*$1, *$3); delete $3;}
 	| ident {$<ident>$=$1;}
 	| numeric
-	| ident comparison expr {$$=new NBinaryOperator(*$1, $2, *$3);}
-	| numeric comparison expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr comparison expr {$$=new NBinaryOperator(*$1, $2, *$3);}
 	| TLPAREN expr TRPAREN {$$=$2;}
 	;
 
