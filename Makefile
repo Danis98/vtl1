@@ -6,7 +6,7 @@ OBJ_FILES := $(OBJ_FILES_GEN) main.o print_funcs.o
 all: parser
 
 parser.cpp: parser.y
-	bison -d -o $@ $<
+	bison -d -o $@ $< -v
 
 parser.hpp: parser.cpp
 
