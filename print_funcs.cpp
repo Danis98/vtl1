@@ -94,3 +94,10 @@ void NIfStatement::print(int ind){
 		elseBlock->print(ind+1);
 	}
 }
+
+void NWhileStatement::print(int ind){
+	do_indentation(ind);
+	cout<<"WHILE STATEMENT:\n";
+	condition.print(ind+1);
+	whileBlock.print(ind+1);
+}

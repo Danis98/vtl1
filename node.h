@@ -140,4 +140,25 @@ public:
 	void print(int ind);
 };
 
+class NWhileStatement : public NStatement{
+public:
+	NExpression& condition;
+	NBlock& whileBlock;
+	NWhileStatement (NExpression& condition, NBlock& whileBlock) : 
+		condition(condition), whileBlock(whileBlock){}
+	void print(int ind);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 #endif
