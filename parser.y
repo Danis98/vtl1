@@ -26,13 +26,13 @@
 %token <string> TIDENTIFIER TINTEGER TDOUBLE
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
-%token <token> TPLUS TMINUS TMUL TDIV
+%token <token> TPLUS TMINUS TMUL TDIV TMOD
 %token <token> TSEMI
 %token <token> TIF TELSE
 
 //Type of each token
 %type <ident> ident
-%type <expr> numeric expr
+%type <expr> numeric expr term
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> program stmts block
@@ -86,12 +86,19 @@ numeric	: TINTEGER {$$=new NInteger(atol($1->c_str())); delete $1;}
 	;
 
 expr	: ident TEQUAL expr {$$=new NAssignment(*$<ident>1, *$3);}
-	| ident TLPAREN call_args TRPAREN {$$=new NMethodCall(*$1, *$3); delete $3;}
-	| ident {$<ident>$=$1;}
-	| numeric
+	| term
 	| expr comparison expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TPLUS expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TMINUS expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TMUL expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TDIV expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TMOD expr {$$=new NBinaryOperator(*$1, $2, *$3);}
 	| TLPAREN expr TRPAREN {$$=$2;}
 	;
+
+term	: ident TLPAREN call_args TRPAREN {$$=new NMethodCall(*$1, *$3); delete $3;}
+	| ident {$<ident>$=$1;}
+	| numeric
 
 call_args : {$$=new ExpressionList();}
 	| expr {$$=new ExpressionList(); $$->push_back($1);}
@@ -99,7 +106,6 @@ call_args : {$$=new ExpressionList();}
 	;
 
 comparison : TCEQ | TCNE | TCLT | TCLE | TCGT | TCGE
-	| TPLUS | TMINUS | TMUL | TDIV
 	;
 
 %%

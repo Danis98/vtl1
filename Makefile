@@ -20,5 +20,5 @@ parser: $(OBJ_FILES)
 	g++ -o $@ $(OBJ_FILES)
 
 clean:
-	rm -rf $(OBJ_FILES_GEN) tokens.cpp parser.cpp parser.hpp *.o *~ parser
+	rm -rf $(OBJ_FILES_GEN) tokens.cpp parser.cpp parser.hpp *.o *~ parser parser.output
 
