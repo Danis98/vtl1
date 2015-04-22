@@ -1,4 +1,4 @@
 #!/bin/sh
 
-make clean
 make
+make clean_tmp
