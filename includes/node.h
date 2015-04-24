@@ -149,6 +149,17 @@ public:
 	void print(int ind);
 };
 
+class NForStatement : public NStatement{
+public:
+	NExpression *assignExpr;
+	NExpression *condition;
+	NExpression *incrExpr;
+	NBlock& forBlock;
+	NForStatement (NExpression *assignExpr, NExpression *condition, NExpression *incrExpr, NBlock& forBlock) : 
+		assignExpr(assignExpr), condition(condition), incrExpr(incrExpr), forBlock(forBlock){}
+	void print(int ind);
+};
+
 
 
 

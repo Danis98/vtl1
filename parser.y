@@ -1,5 +1,5 @@
 %{
-	#include "node.h"
+	#include "includes/node.h"
 	#include <cstdio>
 	#include <cstdlib>
 	NBlock *programBlock;
@@ -28,7 +28,7 @@
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV TMOD
 %token <token> TSEMI
-%token <token> TIF TELSE TWHILE
+%token <token> TIF TELSE TWHILE TFOR
 
 //Type of each token
 %type <ident> ident
@@ -36,7 +36,7 @@
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> program stmts block
-%type <stmt> stmt var_decl func_decl if_stmt whl_stmt
+%type <stmt> stmt var_decl func_decl if_stmt whl_stmt for_stmt
 %type <token> comparison
 
 %left TPLUS TMINUS
@@ -54,7 +54,7 @@ stmts	: stmt {$$=new NBlock(); $$->statements.push_back($<stmt>1);}
 	| stmts stmt {$1->statements.push_back($<stmt>2);}
 	;
 
-stmt	: var_decl TSEMI | func_decl | if_stmt | whl_stmt
+stmt	: var_decl TSEMI | func_decl | if_stmt | whl_stmt | for_stmt
 	| expr TSEMI {$$=new NExpressionStatement(*$1);}
 	;
 
@@ -67,6 +67,9 @@ if_stmt	: TIF TLPAREN expr TRPAREN block {$$=new NIfStatement(*$3, *$5);}
 	;
 
 whl_stmt : TWHILE TLPAREN expr TRPAREN block {$$=new NWhileStatement(*$3, *$5);}
+	;
+
+for_stmt : TFOR TLPAREN expr TSEMI expr TSEMI expr TRPAREN block {$$=new NForStatement($3, $5, $7, *$9);}
 	;
 
 var_decl : ident ident {$$=new NVariableDeclaration(*$1, *$2);}

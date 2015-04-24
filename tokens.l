@@ -1,6 +1,6 @@
 %{
 #include <string>
-#include "node.h"
+#include "includes/node.h"
 #include "parser.hpp"
 #define SAVE_TOKEN yylval.string=new std::string(yytext, yyleng)
 #define TOKEN(t) (yylval.token=t)
@@ -15,6 +15,7 @@
 "if"			return TOKEN(TIF);
 "else"			return TOKEN(TELSE);
 "while"			return TOKEN(TWHILE);
+"for"			return TOKEN(TFOR);
 
 [a-zA-Z_][a-zA-Z0-9_]*	SAVE_TOKEN; return TIDENTIFIER;
 [0-9]+\.[0-9]*		SAVE_TOKEN; return TDOUBLE;

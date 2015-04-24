@@ -1,4 +1,4 @@
-#include "node.h"
+#include "includes/node.h"
 
 using namespace std;
 
@@ -101,3 +101,13 @@ void NWhileStatement::print(int ind){
 	condition.print(ind+1);
 	whileBlock.print(ind+1);
 }
+
+void NForStatement::print(int ind){
+	do_indentation(ind);
+	cout<<"FOR STATEMENT:\n";
+	assignExpr->print(ind+1);
+	condition->print(ind+1);
+	incrExpr->print(ind+1);
+	forBlock.print(ind+1);
+}
+
