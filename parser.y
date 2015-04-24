@@ -23,7 +23,7 @@
 }
 
 //Lexemes from lex
-%token <string> TIDENTIFIER TINTEGER TDOUBLE
+%token <string> TIDENTIFIER TINTEGER TDOUBLE TSTRING
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV TMOD
@@ -32,7 +32,7 @@
 
 //Type of each token
 %type <ident> ident
-%type <expr> numeric expr term
+%type <expr> numeric expr term string
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> program stmts block
@@ -95,6 +95,9 @@ numeric	: TINTEGER {$$=new NInteger(atol($1->c_str())); delete $1;}
 	| TDOUBLE {$$=new NDouble(atof($1->c_str())); delete $1;}
 	;
 
+string	: TSTRING {$$=new NString(*$1);}
+	;
+
 expr	: ident TEQUAL expr {$$=new NAssignment(*$<ident>1, *$3);}
 	| term
 	| expr comparison expr {$$=new NBinaryOperator(*$1, $2, *$3);}
@@ -109,6 +112,7 @@ expr	: ident TEQUAL expr {$$=new NAssignment(*$<ident>1, *$3);}
 term	: ident TLPAREN call_args TRPAREN {$$=new NMethodCall(*$1, *$3); delete $3;}
 	| ident {$<ident>$=$1;}
 	| numeric
+	| string
 	;
 
 call_args : {$$=new ExpressionList();}

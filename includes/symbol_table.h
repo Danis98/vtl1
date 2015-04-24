@@ -3,22 +3,26 @@
 
 #include <vector>
 
+#define NULL_PARENT 0
+
 enum entry_type{
-	VAR,
-	FUNC
+	VOID,
+	INT,
+	DOUBLE,
+	STRING
 };
 
 struct symbol_table_entry{
 	char *identifier;
 	enum entry_type type;
-	//Pointer to local symbol table if the symbol is a function
-	symbol_table *local_table;
 };
 
 struct symbol_table{
+	symbol_table *parent;
 	vector<symbol_table_entry> entries;
 	//Subordinate tables (if-else statements, loops etc...)
-	vector<symbol_table> local_tables;
+	vector<symbol_table*> local_tables;
+	symbol_table(symbol_table *parent) : parent(parent){}
 };
 
 #endif

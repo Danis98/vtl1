@@ -23,6 +23,11 @@ void NIdentifier::print(int ind){
 	cout<<"IDENTIFIER:  "<<name<<endl;
 }
 
+void NString::print(int ind){
+	do_indentation(ind);
+	cout<<"STRING:  "<<value<<endl;
+}
+
 void NMethodCall::print(int ind){
 	do_indentation(ind);
 	cout<<"METHOD CALL: "<<endl;

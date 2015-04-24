@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string.h>
 
 #include <typeid.h>
 
@@ -56,6 +57,16 @@ public:
 	NIdentifier(std::string& name) : name(name){}
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_IDENT;}
+};
+
+class NString : public NExpression{
+public:
+	std::string value;
+	NString(std::string& val) : value(val){
+		value=val.substr(1, val.length()-2);
+	}
+	void print(int ind);
+	int getTypeID(){return NODE_TYPE_STRING;}
 };
 
 class NMethodCall : public NExpression{
