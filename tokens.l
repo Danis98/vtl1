@@ -16,6 +16,7 @@
 "else"			return TOKEN(TELSE);
 "while"			return TOKEN(TWHILE);
 "for"			return TOKEN(TFOR);
+"return"		return TOKEN(TRETURN);
 
 [a-zA-Z_][a-zA-Z0-9_]*	SAVE_TOKEN; return TIDENTIFIER;
 [0-9]+\.[0-9]*		SAVE_TOKEN; return TDOUBLE;

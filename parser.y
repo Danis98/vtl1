@@ -28,7 +28,7 @@
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV TMOD
 %token <token> TSEMI
-%token <token> TIF TELSE TWHILE TFOR
+%token <token> TIF TELSE TWHILE TFOR TRETURN
 
 //Type of each token
 %type <ident> ident
@@ -36,7 +36,7 @@
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> program stmts block
-%type <stmt> stmt var_decl func_decl if_stmt whl_stmt for_stmt
+%type <stmt> stmt var_decl func_decl if_stmt while_stmt for_stmt return_stmt
 %type <token> comparison
 
 %left TPLUS TMINUS
@@ -54,7 +54,7 @@ stmts	: stmt {$$=new NBlock(); $$->statements.push_back($<stmt>1);}
 	| stmts stmt {$1->statements.push_back($<stmt>2);}
 	;
 
-stmt	: var_decl TSEMI | func_decl | if_stmt | whl_stmt | for_stmt
+stmt	: var_decl TSEMI | func_decl | if_stmt | while_stmt | for_stmt | return_stmt TSEMI
 	| expr TSEMI {$$=new NExpressionStatement(*$1);}
 	;
 
@@ -66,10 +66,13 @@ if_stmt	: TIF TLPAREN expr TRPAREN block {$$=new NIfStatement(*$3, *$5);}
 	| TIF TLPAREN expr TRPAREN block TELSE block {$$=new NIfStatement(*$3, *$5, $7);}
 	;
 
-whl_stmt : TWHILE TLPAREN expr TRPAREN block {$$=new NWhileStatement(*$3, *$5);}
+while_stmt : TWHILE TLPAREN expr TRPAREN block {$$=new NWhileStatement(*$3, *$5);}
 	;
 
-for_stmt : TFOR TLPAREN expr TSEMI expr TSEMI expr TRPAREN block {$$=new NForStatement($3, $5, $7, *$9);}
+return_stmt : TRETURN expr {$$=new NReturnStatement(*$2);}
+
+for_stmt : TFOR TLPAREN expr TSEMI expr TSEMI expr TRPAREN block 
+		{$$=new NForStatement($3, $5, $7, *$9);}
 	;
 
 var_decl : ident ident {$$=new NVariableDeclaration(*$1, *$2);}

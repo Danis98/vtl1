@@ -8,11 +8,6 @@ void do_indentation(int ind){
 		cout<<"\t";
 }
 
-void Node::print(int ind){
-	do_indentation(ind);
-	cout<<"Generic node\n";
-}
-
 void NInteger::print(int ind){
 	do_indentation(ind);
 	cout<<"INTEGER:  "<<value<<endl;
@@ -61,13 +56,13 @@ void NBlock::print(int ind){
 
 void NExpressionStatement::print(int ind){
 	do_indentation(ind);
-	cout<<"EXPRESSION\n";
+	cout<<"EXPRESSION:\n";
 	expression.print(ind+1);
 }
 
 void NVariableDeclaration::print(int ind){
 	do_indentation(ind);
-	cout<<"VARIABLE DECLARATION\n";
+	cout<<"VARIABLE DECLARATION:\n";
 	type.print(ind+1);
 	id.print(ind+1);
 	//If it has an expression assigned, print it
@@ -105,9 +100,14 @@ void NWhileStatement::print(int ind){
 void NForStatement::print(int ind){
 	do_indentation(ind);
 	cout<<"FOR STATEMENT:\n";
-	assignExpr->print(ind+1);
+	initExpr->print(ind+1);
 	condition->print(ind+1);
 	incrExpr->print(ind+1);
 	forBlock.print(ind+1);
 }
 
+void NReturnStatement::print(int ind){
+	do_indentation(ind);
+	cout<<"RETURN STATEMENT:\n";
+	returnExpr.print(ind+1);
+}
