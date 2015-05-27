@@ -1,28 +1,67 @@
+#################################################
+#		VARIABLE DEFINITIONS		#
+#################################################
+
 CPPFLAGS =-std=c++11
 INCLUDES =./includes/
 
-OBJ_FILES_GEN := parser.o tokens.o
-OBJ_FILES := $(OBJ_FILES_GEN) main.o print_funcs.o
+#VTL1 front-end directory
+FRONT_DIR := ./front
+#VTL1 back-end directory
+BACK_DIR := ./back/i368
 
-all: parser
+#front-end object files
+OBJ_FILES_FRONT := 		\
+$(FRONT_DIR)/parser.o 		\
+$(FRONT_DIR)/tokens.o 		\
+$(FRONT_DIR)/print_funcs.o
 
-parser.cpp: parser.y
-	bison -d -o $@ $< -v
+GEN_FILES_CLEANUP := 		\
+$(FRONT_DIR)/tokens.cpp 	\
+$(FRONT_DIR)/parser.cpp		\
+$(FRONT_DIR)/parser.hpp
 
-parser.hpp: parser.cpp
+#middle-end object files
+OBJ_FILES_MIDDLE := main.o
 
-tokens.cpp: tokens.l parser.hpp
-	lex -o $@ $<
+#back-end object files
+OBJ_FILES_BACK := 
+
+OBJ_FILES := $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE) $(OBJ_FILES_BACK)
+
+#################################################
+#		COMPILATION RULES		#
+#################################################
+
+all: vtl
+
+vtl: front_end middle_end back_end
+	g++ -o $@ $(OBJ_FILES)
 
 %.o: %.cpp
 	g++ -c $(CPPFLAGS) -o $@ $< -I$(INCLUDES)
 
-parser: $(OBJ_FILES)
-	g++ -o $@ $(OBJ_FILES)
+#Front-end compilation
+front_end: $(OBJ_FILES_FRONT)
 
+$(FRONT_DIR)/parser.cpp: $(FRONT_DIR)/parser.y
+	bison -d -o $@ $< -v
+
+$(FRONT_DIR)/parser.hpp: $(FRONT_DIR)/parser.cpp
+
+$(FRONT_DIR)/tokens.cpp: $(FRONT_DIR)/tokens.l $(FRONT_DIR)/parser.hpp
+	lex -o $@ $<
+
+#Middle-end compilation
+middle_end: $(OBJ_FILES_MIDDLE)
+
+#Back-end compilation
+back_end: $(OBJ_FILES_BACK)
+
+#Cleaning rules
 clean: clean_tmp
-	rm -f parser parser.output
+	rm -f vtl $(FRONT_DIR)/parser.output
 
 clean_tmp:
-	rm -rf $(OBJ_FILES_GEN) tokens.cpp parser.cpp parser.hpp *.o *~
+	rm -rf $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE) $(GEN_FILES_CLEANUP) *~
 

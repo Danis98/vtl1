@@ -1,5 +1,5 @@
 %{
-	#include "includes/node.h"
+	#include "node.h"
 	#include <cstdio>
 	#include <cstdlib>
 	NBlock *programBlock;
