@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#define NULL_PARENT 0
+#define NULL_TABLE 0
 
 enum entry_type{
 	VOID,
@@ -15,13 +15,12 @@ enum entry_type{
 struct symbol_table_entry{
 	char *identifier;
 	enum entry_type type;
+	symbol_table *local_table;
 };
 
 struct symbol_table{
 	symbol_table *parent;
 	vector<symbol_table_entry> entries;
-	//Subordinate tables (if-else statements, loops etc...)
-	vector<symbol_table*> local_tables;
 	symbol_table(symbol_table *parent) : parent(parent){}
 };
 

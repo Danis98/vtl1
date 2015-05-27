@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <sys/stat.h>
-#include "includes/node.h"
+#include "node.h"
 
 using namespace std;
 
@@ -18,7 +18,8 @@ inline bool file_exists(const char *name){
 
 int main(int argc, char **argv){
 	if(argc<2){
-		cout<<"Usage: "<<argv[0]<<"[ -f ] <vtl source file>, "<<argc-1<<" arguments inputted instead\n";
+		cout<<"Usage: "<<argv[0]<<"[ -f ] <vtl source file>, "
+		<<argc-1<<" arguments inputted instead\n";
 		return 0;
 	}
 	
@@ -37,5 +38,13 @@ int main(int argc, char **argv){
 
 	//Print the resulting AST
 	programBlock->print(0);
+
+	//Build the symbol table
+	/**
+
+	Symbol table stuff here 
+
+	**/
+	
 	return 0;
 }
