@@ -22,7 +22,9 @@ $(FRONT_DIR)/parser.cpp		\
 $(FRONT_DIR)/parser.hpp
 
 #middle-end object files
-OBJ_FILES_MIDDLE := main.o
+OBJ_FILES_MIDDLE := 	\
+main.o			\
+s_table.o
 
 #back-end object files
 OBJ_FILES_BACK := 

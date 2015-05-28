@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <sys/stat.h>
-#include "node.h"
+#include <node.h>
 
 using namespace std;
 
@@ -42,7 +42,7 @@ int main(int argc, char **argv){
 	//Build the symbol table
 	/**
 
-	Symbol table stuff here 
+		TODO Symbol table stuff here 
 
 	**/
 	
