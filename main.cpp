@@ -2,11 +2,15 @@
 #include <cstring>
 #include <sys/stat.h>
 #include <node.h>
+#include <symbol_table.h>
 
 using namespace std;
 
-//Root
+//Root AST
 extern NBlock* programBlock;
+//Symbol table
+symbol_table s_table;
+
 extern int yyparse();
 
 extern FILE *yyin;
@@ -40,11 +44,7 @@ int main(int argc, char **argv){
 	programBlock->print(0);
 
 	//Build the symbol table
-	/**
-
-		TODO Symbol table stuff here 
-
-	**/
+	programBlock->generate_symbol_table(s_table);
 	
 	return 0;
 }

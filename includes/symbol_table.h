@@ -26,6 +26,8 @@ struct symbol_table_entry{
 	enum entry_data_type data_type;
 	enum entry_type type;
 	bool initialized;
+	//If it is a function, the types of the args
+	std::vector<enum entry_data_type> args;
 	//Pointer to the sub-table, if existent
 	symbol_table *local_table;
 };
