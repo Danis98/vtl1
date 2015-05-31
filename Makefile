@@ -24,7 +24,8 @@ $(FRONT_DIR)/parser.hpp
 #middle-end object files
 OBJ_FILES_MIDDLE := 	\
 main.o			\
-s_table.o
+s_table.o		\
+typecheck.o
 
 #back-end object files
 OBJ_FILES_BACK := 

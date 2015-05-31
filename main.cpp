@@ -1,15 +1,17 @@
 #include <iostream>
 #include <cstring>
 #include <sys/stat.h>
+
 #include <node.h>
 #include <symbol_table.h>
+#include <typecheck.h>
 
 using namespace std;
 
 //Root AST
 extern NBlock* programBlock;
 //Symbol table
-symbol_table s_table;
+symbol_table s_table(NULL_TABLE);
 
 extern int yyparse();
 
@@ -44,7 +46,7 @@ int main(int argc, char **argv){
 	programBlock->print(0);
 
 	//Build the symbol table
-	programBlock->generate_symbol_table(s_table);
+	//programBlock->generate_symbol_table(s_table);
 	
 	return 0;
 }

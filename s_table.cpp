@@ -1,8 +1,9 @@
 #include <symbol_table.h>
+#include <node.h>
 
-void symbol_table::insert(NIdentifier id, enum entry_type type, enum entry_data_type data_type, bool init){
+void symbol_table::insert(std::string id, enum entry_type type, enum data_type data_type, bool init){
 	symbol_table_entry entry;
-	entry.identifier=id.name;
+	entry.identifier=id;
 	entry.type=type;
 	entry.data_type=data_type;
 	entry.initialized=init;
@@ -14,9 +15,9 @@ void symbol_table::insert(NIdentifier id, enum entry_type type, enum entry_data_
 	}
 }
 
-symbol_table_entry symbol_table::lookup(NIdentifier id, enum etry_type type, std::vector<enum entry_data_type> args){
+symbol_table_entry symbol_table::lookup(std::string id, enum entry_type type, std::vector<enum data_type> args){
 	for(int i=0;i<entries.size();i++){
-		if(entries[i].identifier==id.name){
+		if(entries[i].identifier==id){
 			if(entries[i].type!=type||args.size()!=entries[i].args.size())
 				continue;
 			if(type==VAR)
@@ -31,13 +32,46 @@ symbol_table_entry symbol_table::lookup(NIdentifier id, enum etry_type type, std
 		}
 	}
 	if(parent!=NULL_TABLE)
-		return parent->lookup(id);
+		return parent->lookup(id, type, args);
 	//If not found, display to the user his/her stupidity and exit
-	std::cout<<"Undefined or incompatible symbol "<<id.name<<std::endl;
+	std::cout<<"Undefined or incompatible symbol "<<id<<std::endl;
 	exit(0);
 }
 
-//Generate symbol table
+//Generate symbol table: these function should insert entries in the appropriate symbol table 
+//(recursively) and check if there aren't any undefined symbols
+void NInteger::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NDouble::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NIdentifier::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NString::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NMethodCall::generate_symbol_table(symbol_table *table){
+	//Construct a vector of data_type elements
+	std::vector<enum data_type> args;
+	for(int i=0;i<arguments.size();i++){
+		
+	}
+}
+
+void NBinaryOperator::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NAssignment::generate_symbol_table(symbol_table *table){
+	
+}
+
 void NBlock::generate_symbol_table(symbol_table *table){
 	for(NStatement *stmt : statements)
 		stmt->generate_symbol_table(table);
@@ -47,18 +81,26 @@ void NExpressionStatement::generate_symbol_table(symbol_table *table){
 	expression.generate_symbol_table(table);
 }
 
-void NMethodCall::generate_symbol_table(symbol_table *table){
-	//Construct a vector of entry_data_type elements
-	std::vector<enum entry_data_type> args;
-	for(int i=0;i<arguments.size();i++){
-		switch(arguments[i]->getTypeID()){
-			case NODE_TYPE_INT:
-				args.push_back(INT);
-				break;
-			case NODE_TYPE_DOUBLE:
-				args.push_back(DOUBLE);
-				break;
-		}
-	}
+void NVariableDeclaration::generate_symbol_table(symbol_table *table){
+	
 }
 
+void NFunctionDeclaration::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NIfStatement::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NForStatement::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NWhileStatement::generate_symbol_table(symbol_table *table){
+	
+}
+
+void NReturnStatement::generate_symbol_table(symbol_table *table){
+	
+}

@@ -5,12 +5,14 @@
 #include <vector>
 #include <string.h>
 
+#include <symbol_table.h>
 #include <typeid.h>
 
 class CodeGenContext;
 class NStatement;
 class NExpression;
 class NVariableDeclaration;
+class symbol_table;
 
 typedef std::vector<NStatement*> StatementList;
 typedef std::vector<NExpression*> ExpressionList;
