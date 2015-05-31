@@ -9,8 +9,11 @@
 
 struct symbol_table;
 
+class NExpression;
+enum data_type expr_typecheck(NExpression *expr);
+
 enum entry_type{
-	FUNCTION,
+	FUNC,
 	VAR
 };
 

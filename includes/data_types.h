@@ -3,6 +3,7 @@
 
 enum data_type{
 	VOID,
+	BOOLEAN,
 	INT,
 	DOUBLE,
 	STRING

@@ -8,7 +8,7 @@ void symbol_table::insert(std::string id, enum entry_type type, enum data_type d
 	entry.data_type=data_type;
 	entry.initialized=init;
 	entries.push_back(entry);
-	if(type==FUNCTION){
+	if(type==FUNC){
 		symbol_table loc_table(this);
 		local_tables.push_back(&loc_table);
 		entry.local_table=&loc_table;
@@ -34,7 +34,7 @@ symbol_table_entry symbol_table::lookup(std::string id, enum entry_type type, st
 	if(parent!=NULL_TABLE)
 		return parent->lookup(id, type, args);
 	//If not found, display to the user his/her stupidity and exit
-	std::cout<<"Undefined or incompatible symbol "<<id<<std::endl;
+	std::cout<<"[COMPILATION FAILED]Undefined or incompatible symbol "<<id<<std::endl;
 	exit(0);
 }
 
@@ -60,8 +60,16 @@ void NMethodCall::generate_symbol_table(symbol_table *table){
 	//Construct a vector of data_type elements
 	std::vector<enum data_type> args;
 	for(int i=0;i<arguments.size();i++){
-		
+		args.push_back(expr_typecheck(arguments[i]));
 	}
+	//Check if the method itself exists
+	table->lookup(id.name, FUNC, args);
+	//Do symbol table operations on args. Eventual symbol declarations inside the args
+	//are local
+	symbol_table loc_table(table);
+	table->local_tables.push_back(&loc_table);
+	for(int i=0;i<arguments.size();i++)
+		arguments[i]->generate_symbol_table(&loc_table);
 }
 
 void NBinaryOperator::generate_symbol_table(symbol_table *table){

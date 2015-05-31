@@ -5,7 +5,7 @@
 	NBlock *programBlock;
 
 	extern int yylex();
-	void yyerror(const char *s){std::printf("[ERROR] %s\n", s); std::exit(1);}
+	void yyerror(const char *s){std::printf("[COMPILATION FAILED] %s\n", s); std::exit(1);}
 %}
 
 //Define what is what
