@@ -1,5 +1,5 @@
 #include <typecheck.h>
-#include "front/parser.hpp"
+#include "parser.hpp"
 
 enum data_type expr_typecheck(NExpression *expr){
 	std::vector<enum data_type> args;
@@ -81,5 +81,22 @@ enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 		default:
 			std::cout<<"[COMPILATION FAILED]Dafaq is operand "<<op<<" supposed to mean?\n";
 			exit(0);
+	}
+}
+
+enum data_type get_data_type(std::string id){
+	if(id=="int")
+		return INT;
+	else if(id=="double")
+		return DOUBLE;
+	else if(id=="bool")
+		return BOOLEAN;
+	else if(id=="string")
+		return STRING;
+	else if(id=="void")
+		return VOID;
+	else{
+		std::cout<<"[COMPILATION FAILED]Unknown type "<<id<<std::endl;
+		exit(0);
 	}
 }

@@ -40,20 +40,17 @@ symbol_table_entry symbol_table::lookup(std::string id, enum entry_type type, st
 
 //Generate symbol table: these function should insert entries in the appropriate symbol table 
 //(recursively) and check if there aren't any undefined symbols
-void NInteger::generate_symbol_table(symbol_table *table){
-	
-}
 
-void NDouble::generate_symbol_table(symbol_table *table){
-	
-}
+//Primitives don't need these things
+void NInteger::generate_symbol_table(symbol_table *table){}
+
+void NDouble::generate_symbol_table(symbol_table *table){}
+
+void NString::generate_symbol_table(symbol_table *table){}
 
 void NIdentifier::generate_symbol_table(symbol_table *table){
-	
-}
-
-void NString::generate_symbol_table(symbol_table *table){
-	
+	std::vector<enum data_type> args;
+	table->lookup(name, VAR, args);
 }
 
 void NMethodCall::generate_symbol_table(symbol_table *table){
@@ -73,11 +70,21 @@ void NMethodCall::generate_symbol_table(symbol_table *table){
 }
 
 void NBinaryOperator::generate_symbol_table(symbol_table *table){
-	
+	left.generate_symbol_table(table);
+	left.generate_symbol_table(table);
 }
 
 void NAssignment::generate_symbol_table(symbol_table *table){
-	
+	//Check if the variable exists, then do the same on the symbols of the expression
+	//Finally, check if the types are compatible
+	std::vector<enum data_type> args;
+	enum data_type l_type=table->lookup(left.name, VAR, args).data_type;
+	right.generate_symbol_table(table);
+	enum data_type r_type=expr_typecheck(&right);
+	if(l_type!=r_type && !(l_type==DOUBLE && r_type==INT)){
+		std::cout<<"[COMPILATION FAILED]Incompatible assignment operands.\n";
+		exit(0);
+	}
 }
 
 void NBlock::generate_symbol_table(symbol_table *table){
@@ -87,10 +94,36 @@ void NBlock::generate_symbol_table(symbol_table *table){
 
 void NExpressionStatement::generate_symbol_table(symbol_table *table){
 	expression.generate_symbol_table(table);
+	expr_typecheck(&expression);
 }
 
 void NVariableDeclaration::generate_symbol_table(symbol_table *table){
-	
+	//Search in current scope for a variable also named like that
+	std::vector<enum data_type> args;
+	for(int i=0;i<table->entries.size();i++)
+		if(table->entries[i].identifier==id.name){
+			std::cout<<"[COMPILATION FAILED]Symbol "<<id.name
+				<<" already defined in this scope\n";
+			exit(0);
+		}
+	//Perform typecheck and insert
+	enum data_type t=get_data_type(type.name);
+	if(hasExpr){
+		enum data_type ex_t=expr_typecheck(assignmentExpr);
+		if(t!=ex_t && !(t==DOUBLE && ex_t==INT)){
+			std::cout<<"[COMPILATION FAILED]Incompatible assignment operands"
+				<<"at declaration of "<<id.name<<".\n";
+			exit(0);
+		}
+	}
+	if(t==VOID){
+		std::cout<<"[COMPILATION FAILED]A variable cannot be of void type\n";
+		exit(0);
+	}
+	table->insert(id.name,
+			VAR,
+			t,
+			hasExpr);
 }
 
 void NFunctionDeclaration::generate_symbol_table(symbol_table *table){

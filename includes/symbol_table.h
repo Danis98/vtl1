@@ -11,6 +11,7 @@ struct symbol_table;
 
 class NExpression;
 enum data_type expr_typecheck(NExpression *expr);
+enum data_type get_data_type(std::string id);
 
 enum entry_type{
 	FUNC,

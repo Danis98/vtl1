@@ -14,7 +14,9 @@ BACK_DIR := ./back/i368
 OBJ_FILES_FRONT := 		\
 $(FRONT_DIR)/parser.o 		\
 $(FRONT_DIR)/tokens.o 		\
-$(FRONT_DIR)/print_funcs.o
+$(FRONT_DIR)/print_funcs.o	\
+$(FRONT_DIR)/s_table.o		\
+$(FRONT_DIR)/typecheck.o
 
 GEN_FILES_CLEANUP := 		\
 $(FRONT_DIR)/tokens.cpp 	\
@@ -23,9 +25,7 @@ $(FRONT_DIR)/parser.hpp
 
 #middle-end object files
 OBJ_FILES_MIDDLE := 	\
-main.o			\
-s_table.o		\
-typecheck.o
+main.o
 
 #back-end object files
 OBJ_FILES_BACK := 
