@@ -35,7 +35,7 @@ struct symbol_table{
 	std::vector<symbol_table*> local_tables;
 	symbol_table(symbol_table *parent) : parent(parent){}
 	
-	void insert(std::string id, enum entry_type type, enum data_type data_type, bool init);
+	void insert(std::string id, enum entry_type type, enum data_type data_type,  std::vector<enum data_type> args, bool init);
 	symbol_table_entry lookup(std::string id, enum entry_type type, std::vector<enum data_type> args);
 };
 

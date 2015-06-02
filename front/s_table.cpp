@@ -1,18 +1,15 @@
 #include <symbol_table.h>
 #include <node.h>
 
-void symbol_table::insert(std::string id, enum entry_type type, enum data_type data_type, bool init){
+void symbol_table::insert(std::string id, enum entry_type type, enum data_type data_type, std::vector<enum data_type> args, bool init){
 	symbol_table_entry entry;
 	entry.identifier=id;
 	entry.type=type;
 	entry.data_type=data_type;
 	entry.initialized=init;
 	entries.push_back(entry);
-	if(type==FUNC){
-		symbol_table loc_table(this);
-		local_tables.push_back(&loc_table);
-		entry.local_table=&loc_table;
-	}
+	if(type==FUNC)
+		entry.args=args;
 }
 
 symbol_table_entry symbol_table::lookup(std::string id, enum entry_type type, std::vector<enum data_type> args){
@@ -88,8 +85,10 @@ void NAssignment::generate_symbol_table(symbol_table *table){
 }
 
 void NBlock::generate_symbol_table(symbol_table *table){
+	symbol_table loc_table(table);
+	table->local_tables.push_back(&loc_table);
 	for(NStatement *stmt : statements)
-		stmt->generate_symbol_table(table);
+		stmt->generate_symbol_table(&loc_table);
 }
 
 void NExpressionStatement::generate_symbol_table(symbol_table *table){
@@ -123,25 +122,59 @@ void NVariableDeclaration::generate_symbol_table(symbol_table *table){
 	table->insert(id.name,
 			VAR,
 			t,
+			args,
 			hasExpr);
 }
 
 void NFunctionDeclaration::generate_symbol_table(symbol_table *table){
-	
+	//Make sure the symbol doesn't exist, the make a local symbol table and fill it
+	std::vector<enum data_type> args;
+	for(int i=0;i<arguments.size();i++)
+		args.push_back(get_data_type(arguments[i]->type.name));
+	for(int i=0;i<table->entries.size();i++)
+		if(table->entries[i].identifier==id.name){
+			std::cout<<"[COMPILATION FAILED]Symbol "<<id.name
+				<<" already defined in this scope\n";
+			exit(0);
+		}
+	enum data_type t=get_data_type(type.name);
+	table->insert(id.name,
+			FUNC,
+			t,
+			args,
+			false);
+	symbol_table loc_table(table);
+	table->local_tables.push_back(&loc_table);
+	for(int i=0;i<arguments.size();i++)
+		arguments[i]->generate_symbol_table(&loc_table);
+	block.generate_symbol_table(&loc_table);
 }
 
 void NIfStatement::generate_symbol_table(symbol_table *table){
-	
+	symbol_table loc_table(table);
+	table->local_tables.push_back(&loc_table);
+	condition.generate_symbol_table(&loc_table);
+	ifBlock.generate_symbol_table(&loc_table);
+	//Symbols declared in if condition should not be visible
+	elseBlock->generate_symbol_table(table);
 }
 
 void NForStatement::generate_symbol_table(symbol_table *table){
-	
+	symbol_table loc_table(table);
+	table->local_tables.push_back(&loc_table);
+	initExpr->generate_symbol_table(&loc_table);
+	condition->generate_symbol_table(&loc_table);
+	incrExpr->generate_symbol_table(&loc_table);
+	forBlock.generate_symbol_table(&loc_table);
 }
 
 void NWhileStatement::generate_symbol_table(symbol_table *table){
-	
+	symbol_table loc_table(table);
+	table->local_tables.push_back(&loc_table);
+	condition.generate_symbol_table(&loc_table);
+	whileBlock.generate_symbol_table(&loc_table);
 }
 
 void NReturnStatement::generate_symbol_table(symbol_table *table){
-	
+	returnExpr.generate_symbol_table(table);
 }
