@@ -18,6 +18,9 @@
 "for"			return TOKEN(TFOR);
 "return"		return TOKEN(TRETURN);
 
+"true"			return TOKEN(TTRUE);
+"false"			return TOKEN(TFALSE);
+
 \"(\\.|[^"])*\"		SAVE_TOKEN; return TSTRING;
 [a-zA-Z_][a-zA-Z0-9_]*	SAVE_TOKEN; return TIDENTIFIER;
 [0-9]+\.[0-9]*		SAVE_TOKEN; return TDOUBLE;

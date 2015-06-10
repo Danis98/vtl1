@@ -12,6 +12,7 @@ using namespace std;
 extern NBlock* programBlock;
 //Symbol table
 symbol_table s_table(NULL_TABLE);
+int ind=0;
 
 extern int yyparse();
 
@@ -45,8 +46,9 @@ int main(int argc, char **argv){
 	//Print the resulting AST
 	programBlock->print(0);
 
-	//Build the symbol table
-	//programBlock->generate_symbol_table(s_table);
+	//Build the symbol table and print it
+	programBlock->generate_symbol_table(&s_table);
+	print_s_table(&s_table);
 	
 	return 0;
 }

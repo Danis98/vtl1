@@ -1,7 +1,7 @@
 #include <typecheck.h>
 #include "parser.hpp"
 
-enum data_type expr_typecheck(NExpression *expr){
+enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
 	std::vector<enum data_type> args;
 	enum data_type l, r;
 	switch(expr->getTypeID()){
@@ -14,18 +14,18 @@ enum data_type expr_typecheck(NExpression *expr){
 		//Find the identifier in the symbol. We assume that this is a variable, since a 
 		//methodcall would have been processed at this point (args should be empty)
 		case NODE_TYPE_IDENT:
-			return s_table.lookup(((NIdentifier*)expr)->name, VAR, args).data_type;
+			return table->lookup(((NIdentifier*)expr)->name, VAR, args).data_type;
 		case NODE_TYPE_CALL:
 			for(NExpression *e : ((NMethodCall*)expr)->arguments)
-				args.push_back(expr_typecheck(e));
-			return s_table.lookup(((NMethodCall*)expr)->id.name, FUNC, args).data_type;
+				args.push_back(expr_typecheck(e, table));
+			return table->lookup(((NMethodCall*)expr)->id.name, FUNC, args).data_type;
 		case NODE_TYPE_BINOP:
-			l=expr_typecheck(&((NBinaryOperator*)expr)->left);
-			r=expr_typecheck(&((NBinaryOperator*)expr)->right);
+			l=expr_typecheck(&((NBinaryOperator*)expr)->left, table);
+			r=expr_typecheck(&((NBinaryOperator*)expr)->right, table);
 			return eval_binop(l, r, ((NBinaryOperator*)expr)->op);
 		case NODE_TYPE_ASSIGN:
-			l=s_table.lookup(((NAssignment*)expr)->left.name, VAR, args).data_type;
-			r=expr_typecheck(&((NBinaryOperator*)expr)->right);
+			l=table->lookup(((NAssignment*)expr)->left.name, VAR, args).data_type;
+			r=expr_typecheck(&((NAssignment*)expr)->right, table);
 			if(l==r)
 				return l;
 			if(l==DOUBLE && r==INT)
@@ -40,7 +40,9 @@ enum data_type expr_typecheck(NExpression *expr){
 
 enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 	if(l==VOID||r==VOID){
-		std::cout<<"[COMPILATION FAILED]Incompatible operands.\n";
+			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			<<" {"<<data_type_names(l)<<","
+			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
 		exit(0);
 	}
 	switch(op){
@@ -57,26 +59,34 @@ enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands.\n";
+			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			<<" {"<<data_type_names(l)<<","
+			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
 			exit(0);
 		case TMINUS:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands.\n";
+			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			<<" {"<<data_type_names(l)<<","
+			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
 			exit(0);
 		case TMUL:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands.\n";
+			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			<<" {"<<data_type_names(l)<<","
+			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
 			exit(0);
 		case TMOD:
 			if(l==INT && r==INT)
 				return INT;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands.\n";
+			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			<<" {"<<data_type_names(l)<<","
+			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
 			exit(0);
 		default:
 			std::cout<<"[COMPILATION FAILED]Dafaq is operand "<<op<<" supposed to mean?\n";

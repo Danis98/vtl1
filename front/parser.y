@@ -29,6 +29,7 @@
 %token <token> TPLUS TMINUS TMUL TDIV TMOD
 %token <token> TSEMI
 %token <token> TIF TELSE TWHILE TFOR TRETURN
+%token <token> TTRUE TFALSE
 
 //Type of each token
 %type <ident> ident
