@@ -38,6 +38,7 @@ struct symbol_table{
 	
 	void insert(std::string id, enum entry_type type, enum data_type data_type,  std::vector<enum data_type> args, bool init);
 	symbol_table_entry lookup(std::string id, enum entry_type type, std::vector<enum data_type> args);
+	void set_initialized(std::string id);
 };
 
 void print_s_table(symbol_table *table);

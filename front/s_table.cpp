@@ -33,6 +33,19 @@ void symbol_table::insert(std::string id, enum entry_type type, enum data_type d
 	size++;
 }
 
+void symbol_table::set_initialized(std::string id){
+	for(int i=0;i<entries.size();i++){
+		if(entries[i].identifier==id&&entries[i].type==VAR){
+			entries[i].initialized=true;
+			return;
+		}
+	}
+	if(parent!=NULL_TABLE)
+		return parent->set_initialized(id);
+	std::cout<<"[COMPILATION FAILED] Undefined symbol "<<id<<"\n";
+	exit(0);
+}
+
 symbol_table_entry symbol_table::lookup(std::string id, enum entry_type type, std::vector<enum data_type> args){
 	for(int i=0;i<entries.size();i++){
 		if(entries[i].identifier==id){
@@ -53,7 +66,7 @@ symbol_table_entry symbol_table::lookup(std::string id, enum entry_type type, st
 		return parent->lookup(id, type, args);
 	}
 	//If not found, display to the user his/her stupidity and exit
-	std::cout<<"[COMPILATION FAILED]Undefined or incompatible symbol "<<id<<std::endl;
+	std::cout<<"[COMPILATION FAILED] Undefined or incompatible symbol "<<id<<std::endl;
 	exit(0);
 }
 
@@ -116,11 +129,12 @@ void NAssignment::generate_symbol_table(symbol_table *table){
 	right.generate_symbol_table(table);
 	enum data_type r_type=expr_typecheck(&right, table);
 	if(l_type!=r_type && !(l_type==DOUBLE && r_type==INT)){
-			std::cout<<"[COMPILATION FAILED]Incompatible assignment operands:"
+			std::cout<<"[COMPILATION FAILED] Incompatible assignment operands:"
 			<<" {"<<data_type_names(l_type)<<","
 			<<data_type_names(r_type)<<"}\n";
 		exit(0);
 	}
+	table->set_initialized(left.name);
 	ind--;
 }
 
@@ -152,7 +166,7 @@ void NVariableDeclaration::generate_symbol_table(symbol_table *table){
 	std::vector<enum data_type> args;
 	for(int i=0;i<table->entries.size();i++)
 		if(table->entries[i].identifier==id.name){
-			std::cout<<"[COMPILATION FAILED]Symbol "<<id.name
+			std::cout<<"[COMPILATION FAILED] Symbol "<<id.name
 				<<" already defined in this scope\n";
 			exit(0);
 		}
@@ -161,13 +175,13 @@ void NVariableDeclaration::generate_symbol_table(symbol_table *table){
 	if(hasExpr){
 		enum data_type ex_t=expr_typecheck(assignmentExpr, table);
 		if(t!=ex_t && !(t==DOUBLE && ex_t==INT)){
-			std::cout<<"[COMPILATION FAILED]Incompatible assignment operands"
+			std::cout<<"[COMPILATION FAILED] Incompatible assignment operands"
 				<<"at declaration of "<<id.name<<".\n";
 			exit(0);
 		}
 	}
 	if(t==VOID){
-		std::cout<<"[COMPILATION FAILED]A variable cannot be of void type\n";
+		std::cout<<"[COMPILATION FAILED] A variable cannot be of void type\n";
 		exit(0);
 	}
 	table->insert(id.name,
@@ -189,7 +203,7 @@ void NFunctionDeclaration::generate_symbol_table(symbol_table *table){
 
 	for(int i=0;i<table->entries.size();i++)
 		if(table->entries[i].identifier==id.name){
-			std::cout<<"[COMPILATION FAILED]Symbol "<<id.name
+			std::cout<<"[COMPILATION FAILED] Symbol "<<id.name
 				<<" already defined in this scope\n";
 			exit(0);
 		}
@@ -198,7 +212,7 @@ void NFunctionDeclaration::generate_symbol_table(symbol_table *table){
 			FUNC,
 			t,
 			args,
-			false);
+			true);
 	symbol_table loc_table(table);
 	for(int i=0;i<arguments.size();i++)
 		arguments[i]->generate_symbol_table(&loc_table);

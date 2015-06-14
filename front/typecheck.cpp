@@ -1,9 +1,9 @@
 #include <typecheck.h>
-#include "parser.hpp"
 
 enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
 	std::vector<enum data_type> args;
 	enum data_type l, r;
+	symbol_table_entry e;
 	switch(expr->getTypeID()){
 		case NODE_TYPE_INT:
 			return INT;
@@ -14,7 +14,12 @@ enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
 		//Find the identifier in the symbol. We assume that this is a variable, since a 
 		//methodcall would have been processed at this point (args should be empty)
 		case NODE_TYPE_IDENT:
-			return table->lookup(((NIdentifier*)expr)->name, VAR, args).data_type;
+			e=table->lookup(((NIdentifier*)expr)->name, VAR, args);
+			if(e.initialized==false){
+				std::cout<<"[COMPILATION FAILED] Uninitialized symbol "<<e.identifier<<"\n";
+				exit(0);
+			}
+			return e.data_type;
 		case NODE_TYPE_CALL:
 			for(NExpression *e : ((NMethodCall*)expr)->arguments)
 				args.push_back(expr_typecheck(e, table));
@@ -30,19 +35,19 @@ enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
 				return l;
 			if(l==DOUBLE && r==INT)
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED]Incompatible assignment.\n";
+			std::cout<<"[COMPILATION FAILED] Incompatible assignment.\n";
 			exit(0);
 		default:
-			std::cout<<"[COMPILATION FAILED]Weird expression.\n";
+			std::cout<<"[COMPILATION FAILED] Weird expression.\n";
 			exit(0);
 	}
 }
 
 enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 	if(l==VOID||r==VOID){
-			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
 			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
+			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
 		exit(0);
 	}
 	switch(op){
@@ -59,37 +64,37 @@ enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
 			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
+			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
 			exit(0);
 		case TMINUS:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
 			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
+			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
 			exit(0);
 		case TMUL:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
 			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
+			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
 			exit(0);
 		case TMOD:
 			if(l==INT && r==INT)
 				return INT;
-			std::cout<<"[COMPILATION FAILED]Incompatible operands:"
+			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
 			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op="<<op<<"\n";
+			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
 			exit(0);
 		default:
-			std::cout<<"[COMPILATION FAILED]Dafaq is operand "<<op<<" supposed to mean?\n";
+			std::cout<<"[COMPILATION FAILED] Dafaq is operand "<<op<<" supposed to mean?\n";
 			exit(0);
 	}
 }
@@ -106,7 +111,7 @@ enum data_type get_data_type(std::string id){
 	else if(id=="void")
 		return VOID;
 	else{
-		std::cout<<"[COMPILATION FAILED]Unknown type "<<id<<std::endl;
+		std::cout<<"[COMPILATION FAILED] Unknown type "<<id<<std::endl;
 		exit(0);
 	}
 }
