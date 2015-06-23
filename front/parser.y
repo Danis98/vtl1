@@ -23,17 +23,16 @@
 }
 
 //Lexemes from lex
-%token <string> TIDENTIFIER TINTEGER TDOUBLE TSTRING
+%token <string> TIDENTIFIER TINTEGER TDOUBLE TSTRING TTRUE TFALSE
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %token <token> TLPAREN TRPAREN TLBRACE TRBRACE TCOMMA TDOT
 %token <token> TPLUS TMINUS TMUL TDIV TMOD
 %token <token> TSEMI
 %token <token> TIF TELSE TWHILE TFOR TRETURN
-%token <token> TTRUE TFALSE
 
 //Type of each token
 %type <ident> ident
-%type <expr> numeric expr term string
+%type <expr> numeric expr term string boolean
 %type <varvec> func_decl_args
 %type <exprvec> call_args
 %type <block> program stmts block
@@ -42,7 +41,7 @@
 
 %left TPLUS TMINUS
 %left TMUL TDIV
-//%left TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
+%left TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 
 %start program
 
@@ -96,7 +95,11 @@ numeric	: TINTEGER {$$=new NInteger(atol($1->c_str())); delete $1;}
 	| TDOUBLE {$$=new NDouble(atof($1->c_str())); delete $1;}
 	;
 
-string	: TSTRING {$$=new NString(*$1);}
+boolean : TTRUE {$$=new NBoolean(true);}
+	| TFALSE {$$=new NBoolean(false);}
+	;
+
+string	: TSTRING {$$=new NString(*$1); delete $1;}
 	;
 
 expr	: ident TEQUAL expr {$$=new NAssignment(*$<ident>1, *$3);}
@@ -114,6 +117,7 @@ term	: ident TLPAREN call_args TRPAREN {$$=new NMethodCall(*$1, *$3); delete $3;
 	| ident {$<ident>$=$1;}
 	| numeric
 	| string
+	| boolean
 	;
 
 call_args : {$$=new ExpressionList();}

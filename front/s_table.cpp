@@ -80,6 +80,8 @@ void NDouble::generate_symbol_table(symbol_table *table){}
 
 void NString::generate_symbol_table(symbol_table *table){}
 
+void NBoolean::generate_symbol_table(symbol_table *table){}
+
 void NIdentifier::generate_symbol_table(symbol_table *table){
 	for(int i=0;i<ind;i++) std::cout<<"\t";
 	std::cout<<"[S_TABLE] Identifier: "<<name<<std::endl;
@@ -146,6 +148,7 @@ void NBlock::generate_symbol_table(symbol_table *table){
 	for(NStatement *stmt : statements)
 		stmt->generate_symbol_table(&loc_table);
 	table->local_tables.push_back(loc_table);
+	loc_table=&(table->local_tables[table->local_tables.size()-1]);
 	ind--;
 }
 
@@ -214,10 +217,13 @@ void NFunctionDeclaration::generate_symbol_table(symbol_table *table){
 			args,
 			true);
 	symbol_table loc_table(table);
-	for(int i=0;i<arguments.size();i++)
+	for(int i=0;i<arguments.size();i++){
 		arguments[i]->generate_symbol_table(&loc_table);
+		loc_table.set_initialized(arguments[i]->id.name);
+	}
 	block.generate_symbol_table(&loc_table);
 	table->local_tables.push_back(loc_table);
+	loc_table=&(table->local_tables[table->local_tables.size()-1]);
 	ind--;
 }
 
@@ -229,8 +235,10 @@ void NIfStatement::generate_symbol_table(symbol_table *table){
 	condition.generate_symbol_table(&loc_table);
 	ifBlock.generate_symbol_table(&loc_table);
 	table->local_tables.push_back(loc_table);
+	true_table=&(table->local_tables[table->local_tables.size()-1]);
 	//Symbols declared in if condition should not be visible
 	elseBlock->generate_symbol_table(table);
+	false_table=&(table->local_tables[table->local_tables.size()-1]);
 	ind--;
 }
 
@@ -244,6 +252,7 @@ void NForStatement::generate_symbol_table(symbol_table *table){
 	incrExpr->generate_symbol_table(&loc_table);
 	forBlock.generate_symbol_table(&loc_table);
 	table->local_tables.push_back(loc_table);
+	loc_table=&(table->local_tables[table->local_tables.size()-1]);
 	ind--;
 }
 
@@ -255,6 +264,7 @@ void NWhileStatement::generate_symbol_table(symbol_table *table){
 	condition.generate_symbol_table(&loc_table);
 	whileBlock.generate_symbol_table(&loc_table);
 	table->local_tables.push_back(loc_table);
+	loc_table=&(table->local_tables[table->local_tables.size()-1]);
 	ind--;
 }
 

@@ -9,6 +9,8 @@ enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
 			return INT;
 		case NODE_TYPE_DOUBLE:
 			return DOUBLE;
+		case NODE_TYPE_BOOLEAN:
+			return BOOLEAN;
 		case NODE_TYPE_STRING:
 			return STRING;
 		//Find the identifier in the symbol. We assume that this is a variable, since a 

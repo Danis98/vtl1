@@ -17,5 +17,6 @@
 #define NODE_TYPE_WHILE		13
 #define NODE_TYPE_FOR		14
 #define NODE_TYPE_RETURN	15
+#define NODE_TYPE_BOOLEAN	16
 
 #endif

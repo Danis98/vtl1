@@ -1,5 +1,7 @@
 int a=0;
 
+bool banana=false;
+
 int hello(double n){
 	int a=a;
 	while(a<n){
@@ -11,6 +13,16 @@ int hello(double n){
 
 string str="Foffo";
 
+bool isFoffo(string s){
+	if(s=="Foffo"){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+banana=isFoffo(str);
 
 int b=a+3;
 hello(3.14)-a*b-30;

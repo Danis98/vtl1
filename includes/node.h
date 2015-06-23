@@ -58,6 +58,15 @@ public:
 	void generate_symbol_table(symbol_table *table);
 };
 
+class NBoolean : public NExpression{
+public:
+	bool value;
+	NBoolean(bool value) : value(value){}
+	void print(int ind);
+	int getTypeID(){return NODE_TYPE_BOOLEAN;}
+	void generate_symbol_table(symbol_table *table);
+};
+
 class NIdentifier : public NExpression{
 public:
 	std::string name;
@@ -118,6 +127,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_BLOCK;}
 	void generate_symbol_table(symbol_table *table);
+	symbol_table *loc_table;
 };
 
 class NExpressionStatement : public NStatement{
@@ -156,6 +166,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_FUNC;}
 	void generate_symbol_table(symbol_table *table);
+	symbol_table *loc_table;
 };
 
 class NIfStatement : public NStatement{
@@ -171,6 +182,8 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_IF;}
 	void generate_symbol_table(symbol_table *table);
+	symbol_table *true_table;
+	symbol_table *false_table;
 };
 
 class NWhileStatement : public NStatement{
@@ -182,6 +195,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_WHILE;}
 	void generate_symbol_table(symbol_table *table);
+	symbol_table *loc_table;
 };
 
 class NForStatement : public NStatement{
@@ -197,6 +211,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_FOR;}
 	void generate_symbol_table(symbol_table *table);
+	symbol_table *loc_table;
 };
 
 class NReturnStatement : public NStatement{
@@ -206,6 +221,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_RETURN;}
 	void generate_symbol_table(symbol_table *table);
+	symbol_table *loc_table;
 };
 
 #endif

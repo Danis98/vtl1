@@ -18,6 +18,11 @@ void NDouble::print(int ind){
 	cout<<"DOUBLE:  "<<value<<endl;
 }
 
+void NBoolean::print(int ind){
+	do_indentation(ind);
+	cout<<"BOOL: "<<(value?"true":"false")<<endl;
+}
+
 void NIdentifier::print(int ind){
 	do_indentation(ind);
 	cout<<"IDENTIFIER:  "<<name<<endl;
