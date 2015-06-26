@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <data_types.h>
+#include <int_codegen.h>
 
 #define NULL_TABLE 0
 
@@ -14,6 +15,7 @@ enum data_type expr_typecheck(NExpression *expr, symbol_table *table);
 enum data_type get_data_type(std::string id);
 
 extern int ind;
+extern struct symbol_table cur_table;
 
 enum entry_type{
 	FUNC,
@@ -21,26 +23,37 @@ enum entry_type{
 };
 
 struct symbol_table_entry{
-	std::string identifier;
+	//Original name
+	std::string name;
+	//Scope-specific name
+	std::string id;
 	enum data_type data_type;
 	enum entry_type type;
 	bool initialized;
-	//If it is a function, the types of the args
-	std::vector<enum data_type> args;
+	int offset;
 };
 
 struct symbol_table{
 	int size=0;
+	std::string name;
 	symbol_table *parent;
 	std::vector<symbol_table_entry> entries;
 	std::vector<symbol_table> local_tables;
 	symbol_table(symbol_table *parent) : parent(parent){}
-	
-	void insert(std::string id, enum entry_type type, enum data_type data_type,  std::vector<enum data_type> args, bool init);
-	symbol_table_entry lookup(std::string id, enum entry_type type, std::vector<enum data_type> args);
-	void set_initialized(std::string id);
+	struct symbol_table* mktable(){
+		struct symbol_table child(this);
+		child.name=name+"_"+size;
+		local_tables.push_back(child);
+		return &(local_tables[size++]);
+	}
 };
 
+extern int offset;
+
 void print_s_table(symbol_table *table);
+
+struct symbol_table_entry *insert(std::string id,enum entry_type type, enum data_type d_type, bool init, int offset);
+struct symbol_table_entry *lookup(std::string id);
+void set_initialized(std::string id);
 
 #endif

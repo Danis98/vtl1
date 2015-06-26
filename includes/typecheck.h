@@ -13,7 +13,7 @@ enum data_type get_data_type(std::string id);
 inline std::string getOp(int op){
 	switch(op){
 		case TCEQ:
-			return "=";
+			return "==";
 		case TCNE:
 			return "!=";
 		case TCLT:

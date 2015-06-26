@@ -1,9 +1,8 @@
 #include <typecheck.h>
 
-enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
-	std::vector<enum data_type> args;
+enum data_type expr_typecheck(NExpression *expr){
 	enum data_type l, r;
-	symbol_table_entry e;
+	symbol_table_entry *e;
 	switch(expr->getTypeID()){
 		case NODE_TYPE_INT:
 			return INT;
@@ -16,8 +15,8 @@ enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
 		//Find the identifier in the symbol. We assume that this is a variable, since a 
 		//methodcall would have been processed at this point (args should be empty)
 		case NODE_TYPE_IDENT:
-			e=table->lookup(((NIdentifier*)expr)->name, VAR, args);
-			if(e.initialized==false){
+			e=table->lookup(((NIdentifier*)expr)->name);
+			if(e->initialized==false){
 				std::cout<<"[COMPILATION FAILED] Uninitialized symbol "<<e.identifier<<"\n";
 				exit(0);
 			}
@@ -39,6 +38,11 @@ enum data_type expr_typecheck(NExpression *expr, symbol_table *table){
 				return DOUBLE;
 			std::cout<<"[COMPILATION FAILED] Incompatible assignment.\n";
 			exit(0);
+		case NODE_TYPE_BLOCK:
+			for(Statement* stmt : expr->statements)
+				if(stmt->getTypeID()==NODE_TYPE_RETURN)
+					return expr_typecheck(stmt->&returnExpr);
+			return VOID;
 		default:
 			std::cout<<"[COMPILATION FAILED] Weird expression.\n";
 			exit(0);
@@ -96,7 +100,7 @@ enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
 			exit(0);
 		default:
-			std::cout<<"[COMPILATION FAILED] Dafaq is operand "<<op<<" supposed to mean?\n";
+			std::cout<<"[COMPILATION FAILED] Operator "<<op<<" undefined\n";
 			exit(0);
 	}
 }

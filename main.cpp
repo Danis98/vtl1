@@ -46,9 +46,7 @@ int main(int argc, char **argv){
 	//Print the resulting AST
 	programBlock->print(0);
 
-	//Build the symbol table and print it
-	programBlock->generate_symbol_table(&s_table);
-	print_s_table(&s_table);
+	//Generate intermediate code
 	
 	return 0;
 }
