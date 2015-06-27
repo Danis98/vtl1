@@ -1,6 +1,8 @@
 #ifndef _DATA_TYPES_H
 #define _DATA_TYPES_H
 
+#define MAX_STRLEN 256
+
 enum data_type{
 	VOID,
 	BOOLEAN,
@@ -9,7 +11,7 @@ enum data_type{
 	STRING
 };
 
-inline int get_width(NExpression *var, enum data_type t){
+inline int get_width(enum data_type dt){
 	switch(dt){
 		case VOID:
 			return 0;
@@ -20,7 +22,7 @@ inline int get_width(NExpression *var, enum data_type t){
 		case DOUBLE:
 			return 8;
 		case STRING:
-			return (NString*)var->value.size()*4;
+			return 4*MAX_STRLEN;
 		default:
 			return 0;
 	}

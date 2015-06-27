@@ -30,11 +30,12 @@ struct symbol_table_entry{
 	enum data_type data_type;
 	enum entry_type type;
 	bool initialized;
+	int width;
 	int offset;
 };
 
 struct symbol_table{
-	int size=0;
+	int subtable_size=0, size=0;
 	std::string name;
 	symbol_table *parent;
 	std::vector<symbol_table_entry> entries;
@@ -42,9 +43,9 @@ struct symbol_table{
 	symbol_table(symbol_table *parent) : parent(parent){}
 	struct symbol_table* mktable(){
 		struct symbol_table child(this);
-		child.name=name+"_"+size;
+		child.name=name+"_"+std::to_string(subtable_size);
 		local_tables.push_back(child);
-		return &(local_tables[size++]);
+		return &(local_tables[subtable_size++]);
 	}
 };
 
@@ -52,8 +53,8 @@ extern int offset;
 
 void print_s_table(symbol_table *table);
 
-struct symbol_table_entry *insert(std::string id,enum entry_type type, enum data_type d_type, bool init, int offset);
-struct symbol_table_entry *lookup(std::string id);
+struct symbol_table_entry *insert(std::string id,enum entry_type type, enum data_type d_type, bool init, int width, int offset);
+struct symbol_table_entry *lookup(std::string id, enum entry_type type);
 void set_initialized(std::string id);
 
 #endif

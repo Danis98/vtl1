@@ -23,16 +23,15 @@ void print_s_table(symbol_table *table){
 	ind--;
 }
 
-void insert(std::string id, enum entry_type type, enum data_type data_type, bool init, int offset){
+void insert(std::string name, enum entry_type type, enum data_type data_type, bool init, int width, int offset){
 	symbol_table_entry entry;
-	entry.identifier=id;
+	entry.name=name;
+	entry.id=cur_table.name+(type==FUNC?"_f_":"_")+std::to_string(name);
 	entry.type=type;
 	entry.data_type=data_type;
 	entry.initialized=init;
-	if(type==FUNC)
-		entry.args=args;
-	entries.push_back(entry);
-	size++;
+	cur_table.entries.push_back(entry);
+	cur_table.size++;
 }
 
 void set_initialized(std::string id){
@@ -48,9 +47,9 @@ void set_initialized(std::string id){
 	exit(0);
 }
 
-symbol_table_entry lookup(std::string id){
+symbol_table_entry lookup(std::string id, enum entry_type type){
 	for(int i=0;i<entries.size();i++)
-		if(entries[i].name==id)
+		if(entries[i].name==id && entries[i].type==type)
 			return entries[i];
 
 	if(parent!=NULL_TABLE)

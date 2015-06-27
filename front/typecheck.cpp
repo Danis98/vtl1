@@ -15,23 +15,23 @@ enum data_type expr_typecheck(NExpression *expr){
 		//Find the identifier in the symbol. We assume that this is a variable, since a 
 		//methodcall would have been processed at this point (args should be empty)
 		case NODE_TYPE_IDENT:
-			e=table->lookup(((NIdentifier*)expr)->name);
+			e=lookup(((NIdentifier*)expr)->name, VAR);
 			if(e->initialized==false){
-				std::cout<<"[COMPILATION FAILED] Uninitialized symbol "<<e.identifier<<"\n";
+				std::cout<<"[COMPILATION FAILED] Uninitialized symbol "<<e->name<<"\n";
 				exit(0);
 			}
-			return e.data_type;
+			return e->data_type;
 		case NODE_TYPE_CALL:
 			for(NExpression *e : ((NMethodCall*)expr)->arguments)
-				args.push_back(expr_typecheck(e, table));
-			return table->lookup(((NMethodCall*)expr)->id.name, FUNC, args).data_type;
+				expr_typecheck(e);
+			return lookup(((NMethodCall*)expr)->id.name, FUNC)->data_type;
 		case NODE_TYPE_BINOP:
-			l=expr_typecheck(&((NBinaryOperator*)expr)->left, table);
-			r=expr_typecheck(&((NBinaryOperator*)expr)->right, table);
+			l=expr_typecheck(&((NBinaryOperator*)expr)->left);
+			r=expr_typecheck(&((NBinaryOperator*)expr)->right);
 			return eval_binop(l, r, ((NBinaryOperator*)expr)->op);
 		case NODE_TYPE_ASSIGN:
-			l=table->lookup(((NAssignment*)expr)->left.name, VAR, args).data_type;
-			r=expr_typecheck(&((NAssignment*)expr)->right, table);
+			l=lookup(((NAssignment*)expr)->left.name, VAR)->data_type;
+			r=expr_typecheck(&((NAssignment*)expr)->right);
 			if(l==r)
 				return l;
 			if(l==DOUBLE && r==INT)
@@ -39,9 +39,9 @@ enum data_type expr_typecheck(NExpression *expr){
 			std::cout<<"[COMPILATION FAILED] Incompatible assignment.\n";
 			exit(0);
 		case NODE_TYPE_BLOCK:
-			for(Statement* stmt : expr->statements)
+			for(NStatement* stmt : ((NBlock*)expr)->statements)
 				if(stmt->getTypeID()==NODE_TYPE_RETURN)
-					return expr_typecheck(stmt->&returnExpr);
+					return expr_typecheck(&(((NReturnStatement*)stmt)->returnExpr));
 			return VOID;
 		default:
 			std::cout<<"[COMPILATION FAILED] Weird expression.\n";

@@ -23,32 +23,31 @@ public:
 	virtual ~Node(){}
 	virtual void print(int ind)=0;
 	virtual int getTypeID()=0;
-	virtual void generate_symbol_table(symbol_table *table)=0;
-	virtual temp_val codegen()=0;
+	virtual temp_var codegen()=0;
 };
 
 class NExpression : public Node{
 public:
 	virtual void print(int ind)=0;
 	virtual int getTypeID()=0;
-	virtual temp_val codegen()=0;
+	virtual temp_var codegen()=0;
 };
 
 class NStatement : public Node{
 public:
 	virtual void print(int ind)=0;
 	virtual int getTypeID()=0;
-	virtual temp_val codegen()=0;
+	virtual temp_var codegen()=0;
 };
 
 class NInteger : public NExpression{
 public:
-	long long value;
-	NInteger(long long value) : value(value){}
+	int value;
+	NInteger(int value) : value(value){}
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_INT;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NDouble : public NExpression{
@@ -58,7 +57,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_DOUBLE;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NBoolean : public NExpression{
@@ -68,7 +67,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_BOOLEAN;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NIdentifier : public NExpression{
@@ -78,7 +77,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_IDENT;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NString : public NExpression{
@@ -90,7 +89,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_STRING;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NMethodCall : public NExpression{
@@ -102,7 +101,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_CALL;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NBinaryOperator : public NExpression{
@@ -115,7 +114,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_BINOP;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NAssignment : public NExpression{
@@ -126,7 +125,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_ASSIGN;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NBlock : public NExpression {
@@ -136,7 +135,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_BLOCK;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 	symbol_table *loc_table;
 };
 
@@ -147,7 +146,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_EXPR_STMT;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NVariableDeclaration : public NStatement {
@@ -163,7 +162,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_VAR_DECL;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 };
 
 class NFunctionDeclaration : public NStatement {
@@ -178,7 +177,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_FUNC;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 	//s_tables
 	symbol_table *loc_table;
 };
@@ -196,7 +195,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_IF;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 	//s_tables
 	symbol_table *true_table;
 	symbol_table *false_table;
@@ -211,7 +210,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_WHILE;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 	symbol_table *loc_table;
 };
 
@@ -228,7 +227,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_FOR;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 
 	symbol_table *loc_table;
 };
@@ -240,7 +239,7 @@ public:
 	void print(int ind);
 	int getTypeID(){return NODE_TYPE_RETURN;}
 	//CodeGen
-	temp_val codegen();
+	temp_var codegen();
 
 	symbol_table *loc_table;
 };
