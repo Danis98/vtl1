@@ -25,25 +25,7 @@ enum int_ops{
 	OP_RET
 };
 
-std::string int_ops_str[]={
-	"ADD",
-	"SUB",
-	"MULT",
-	"DIV",
-	"MOD",
-	"ASSIGN",
-	"PARAM",
-	"CALL",
-	"JUMP",
-	"LABEL",
-	"==",
-	"!=",
-	"<",
-	"<=",
-	">",
-	">=",
-	"RETURN"
-};
+extern std::string int_ops_str[];
 
 typedef  std::string temp_var;
 typedef std::string label;
@@ -72,15 +54,15 @@ extern struct intermediate_form int_code;
 
 inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 	if(op==OP_ASSIGN)
-		std::cout<<r<<"\t:=\t"<<a1<<std::endl;
+		std::cout<<r<<" := "<<a1<<std::endl;
 	else if(op==OP_PARAM || op==OP_RET)
 		std::cout<<int_ops_str[(int)op]<<" "<<a1<<std::endl;
 	else if(op==OP_LABEL)
 		std::cout<<int_ops_str[(int)op]<<" "<<a1<<":\n";
 	else if(op==OP_CALL)
-		std::cout<<r<<"\t:=\t"<<int_ops_str[(int)op]<<"\t"<<a1<<"\t"<<a2<<std::endl;
+		std::cout<<r<<" := "<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
 	else
-		std::cout<<r<<"\t:=\t"<<a1<<"\t"<<int_ops_str[(int)op]<<"\t"<<a2<<std::endl;
+		std::cout<<r<<" := "<<a1<<" "<<int_ops_str[(int)op]<<" "<<a2<<std::endl;
 	int_code.instructions.push_back({op, a1, a2, r});
 }
 

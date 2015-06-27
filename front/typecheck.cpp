@@ -30,6 +30,7 @@ enum data_type expr_typecheck(NExpression *expr){
 			r=expr_typecheck(&((NBinaryOperator*)expr)->right);
 			return eval_binop(l, r, ((NBinaryOperator*)expr)->op);
 		case NODE_TYPE_ASSIGN:
+			e=lookup(((NAssignment*)expr)->left.name, VAR);
 			l=lookup(((NAssignment*)expr)->left.name, VAR)->data_type;
 			r=expr_typecheck(&((NAssignment*)expr)->right);
 			if(l==r)

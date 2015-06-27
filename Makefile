@@ -15,6 +15,7 @@ OBJ_FILES_FRONT := 		\
 $(FRONT_DIR)/parser.o 		\
 $(FRONT_DIR)/tokens.o 		\
 $(FRONT_DIR)/print_funcs.o	\
+$(FRONT_DIR)/s_table.o		\
 $(FRONT_DIR)/typecheck.o	\
 $(FRONT_DIR)/codegen.o
 

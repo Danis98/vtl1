@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <data_types.h>
 #include <int_codegen.h>
 
@@ -11,7 +12,7 @@
 struct symbol_table;
 
 class NExpression;
-enum data_type expr_typecheck(NExpression *expr, symbol_table *table);
+enum data_type expr_typecheck(NExpression *expr);
 enum data_type get_data_type(std::string id);
 
 extern int ind;
@@ -41,6 +42,7 @@ struct symbol_table{
 	std::vector<symbol_table_entry> entries;
 	std::vector<symbol_table> local_tables;
 	symbol_table(symbol_table *parent) : parent(parent){}
+	symbol_table(){parent==NULL_TABLE; name="s_table";}
 	struct symbol_table* mktable(){
 		struct symbol_table child(this);
 		child.name=name+"_"+std::to_string(subtable_size);

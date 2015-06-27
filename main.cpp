@@ -47,6 +47,7 @@ int main(int argc, char **argv){
 	programBlock->print(0);
 
 	//Generate intermediate code
+	programBlock->codegen();
 	
 	return 0;
 }
