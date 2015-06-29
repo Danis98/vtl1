@@ -1,16 +1,21 @@
 #include <node.h>
 #include "parser.hpp"
 
+enum data_type expected;
+bool isFuncBlock=false;
+
 std::string int_ops_str[]={
-	"ADD",
-	"SUB",
-	"MULT",
-	"DIV",
-	"MOD",
-	"ASSIGN",
+	"+",
+	"-",
+	"*",
+	"/",
+	"%",
+	":=",
 	"PARAM",
 	"CALL",
 	"JUMP",
+	"JUMPIF",
+	"JUMPNIF",
 	"LABEL",
 	"==",
 	"!=",
@@ -27,22 +32,22 @@ int offset=0;
 int occupied_temps=0, occupied_labels=0;
 
 temp_var get_temp(){
-	return "t"+std::to_string(occupied_temps++);
+	return "t"+to_string(occupied_temps++);
 }
 
 label get_label(){
-	return "L"+std::to_string(occupied_labels++);
+	return "L"+to_string(occupied_labels++);
 }
 
 temp_var NInteger::codegen(){
 	temp_var t=get_temp();
-	emit(OP_ASSIGN, std::to_string(value), "", t);
+	emit(OP_ASSIGN, to_string(value), "", t);
 	return t;
 }
 
 temp_var NDouble::codegen(){
 	temp_var t=get_temp();
-	emit(OP_ASSIGN, std::to_string(value), "", t);
+	emit(OP_ASSIGN, to_string(value), "", t);
 	return t;
 }
 
@@ -103,6 +108,9 @@ temp_var NBinaryOperator::codegen(){
 	case TMUL:
 		emit(OP_MUL, left.codegen(), right.codegen(), t);
 		return t;
+	case TDIV:
+		emit(OP_DIV, left.codegen(), right.codegen(), t);
+		return t;
 	case TMOD:
 		emit(OP_MOD, left.codegen(), right.codegen(), t);
 		return t;
@@ -114,22 +122,24 @@ temp_var NBinaryOperator::codegen(){
 
 temp_var NAssignment::codegen(){
 	struct symbol_table_entry *e=lookup(left.name, VAR);
-	temp_var p=e->id, t=get_temp();
+	temp_var p=e->id;
 	set_initialized(left.name);
 	expr_typecheck(this);
-	emit(OP_ASSIGN, p, right.codegen(), t);
-	return t;
+	emit(OP_ASSIGN, right.codegen(), "", p);
+	return p;
 }
 
 temp_var NBlock::codegen(){
 	temp_var r="";
-	cur_table=*(cur_table.mktable());
+	cur_table=mktable();
 	for(NStatement *stmt : statements)
 		if(stmt->getTypeID()==NODE_TYPE_RETURN)
 			r=stmt->codegen();
 		else
 			stmt->codegen();
+	
 	cur_table=*(cur_table.parent);
+	
 	return r;
 }
 
@@ -149,31 +159,68 @@ temp_var NVariableDeclaration::codegen(){
 }
 
 temp_var NFunctionDeclaration::codegen(){
+	//Function label
 	label func_label=insert(id.name, FUNC, get_data_type(type.name), true, 0, 0)->id;
-	enum data_type ret_type=expr_typecheck(&block);
-	if(get_data_type(type.name)!=ret_type){
-		std::cout<<"[COMPILATION FAILED] Function "<<id.name<<" returning a "
-			<<data_type_names(ret_type)<<" value, "<<type.name<<" expected\n";
-		exit(0);
-	}
-	cur_table=*(cur_table.mktable());
-
-	for(NVariableDeclaration *arg : arguments)
-		insert(arg->id.name, VAR, get_data_type(arg->type.name), true, get_width(get_data_type(arg->type.name)), offset);
-
 	emit(OP_LABEL, func_label, "", "");
+	
+	//Enter local scope and generate code
+	cur_table=mktable();
+
+	int arg_count=0;
+	for(NVariableDeclaration *arg : arguments){
+		temp_var p_id=insert(arg->id.name, VAR, get_data_type(arg->type.name), true, get_width(get_data_type(arg->type.name)), offset)->id;
+		emit(OP_ASSIGN, "param_"+to_string(arg_count), "", p_id);
+	}
+	
+	//Setup for typecheck
+	isFuncBlock=true;
+	expected=get_data_type(type.name);
+	
+	//Generate and check
 	block.codegen();
+	
+	isFuncBlock=false;
 
 	cur_table=*(cur_table.parent);
 }
 
 temp_var NIfStatement::codegen(){
-	
+	label false_label=get_label();
+	label next=get_label();
+	temp_var e=condition.codegen();
+	emit(OP_JUMPNIF, e, false_label, "");
+	ifBlock.codegen();
+	emit(OP_JUMP, next, "", "");
+	emit(OP_LABEL, false_label, "", "");
+	if(hasElse)
+		elseBlock->codegen();
+	emit(OP_LABEL, next, "", "");
+	return "";
 }
 
-temp_var NForStatement::codegen(){}
+temp_var NForStatement::codegen(){
+	label begin=get_label();
+	label next=get_label();
+	initExpr->codegen();
+	emit(OP_LABEL, begin, "", "");
+	temp_var e=condition->codegen();
+	emit(OP_JUMPNIF, e, next, "");
+	forBlock.codegen();
+	emit(OP_JUMP, begin, "", "");
+	emit(OP_LABEL, next, "", "");
+	return "";
+}
 
-temp_var NWhileStatement::codegen(){}
+temp_var NWhileStatement::codegen(){
+	label begin=get_label();
+	label next=get_label();
+	emit(OP_LABEL, begin, "", "");
+	temp_var e=condition.codegen();
+	emit(OP_JUMPNIF, e, next, "");
+	whileBlock.codegen();
+	emit(OP_LABEL, next, "", "");
+	return "";
+}
 
 temp_var NReturnStatement::codegen(){
 	temp_var t=returnExpr.codegen();

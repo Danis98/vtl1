@@ -11,7 +11,7 @@ using namespace std;
 //Root AST
 extern NBlock* programBlock;
 //Symbol table
-symbol_table s_table(NULL_TABLE);
+struct symbol_table cur_table;
 int ind=0;
 
 extern int yyparse();

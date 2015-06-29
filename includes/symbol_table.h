@@ -40,23 +40,17 @@ struct symbol_table{
 	std::string name;
 	symbol_table *parent;
 	std::vector<symbol_table_entry> entries;
-	std::vector<symbol_table> local_tables;
-	symbol_table(symbol_table *parent) : parent(parent){}
-	symbol_table(){parent==NULL_TABLE; name="s_table";}
-	struct symbol_table* mktable(){
-		struct symbol_table child(this);
-		child.name=name+"_"+to_string(subtable_size);
-		local_tables.push_back(child);
-		return &(local_tables[subtable_size++]);
+	symbol_table(symbol_table *parent) : parent(parent){
+		name=parent->name+"_"+to_string(subtable_size++);	
 	}
+	symbol_table(){parent==NULL_TABLE; name="";}
 };
 
 extern int offset;
 
-void print_s_table(symbol_table *table);
-
 struct symbol_table_entry *insert(std::string id,enum entry_type type, enum data_type d_type, bool init, int width, int offset);
 struct symbol_table_entry *lookup(std::string id, enum entry_type type);
 void set_initialized(std::string id);
+inline symbol_table mktable(){return new symbol_table(cur_table);}
 
 #endif

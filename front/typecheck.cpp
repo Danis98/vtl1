@@ -2,6 +2,7 @@
 
 enum data_type expr_typecheck(NExpression *expr){
 	enum data_type l, r;
+	bool init=false;
 	symbol_table_entry *e;
 	switch(expr->getTypeID()){
 		case NODE_TYPE_INT:
@@ -41,9 +42,21 @@ enum data_type expr_typecheck(NExpression *expr){
 			exit(0);
 		case NODE_TYPE_BLOCK:
 			for(NStatement* stmt : ((NBlock*)expr)->statements)
-				if(stmt->getTypeID()==NODE_TYPE_RETURN)
-					return expr_typecheck(&(((NReturnStatement*)stmt)->returnExpr));
-			return VOID;
+				if(stmt->getTypeID()==NODE_TYPE_RETURN){
+					if(!init){
+						l=expr_typecheck(&(((NReturnStatement*)stmt)->returnExpr));
+						init=true;
+					}
+					else{
+						r=expr_typecheck(&(((NReturnStatement*)stmt)->returnExpr));
+						if(l==r) l=r;
+						else{
+							std::cout<<"[COMPILATION FAILED] Incompatible returns\n";
+							exit(0);
+						}
+					}
+			}
+			return init?l:VOID;
 		default:
 			std::cout<<"[COMPILATION FAILED] Weird expression.\n";
 			exit(0);
@@ -85,6 +98,15 @@ enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
 			exit(0);
 		case TMUL:
+			if(l==r && l!=STRING)
+				return l;
+			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
+				return DOUBLE;
+			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
+			<<" {"<<data_type_names(l)<<","
+			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
+			exit(0);
+		case TDIV:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
