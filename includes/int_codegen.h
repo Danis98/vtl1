@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <cstdlib>
+#include <utils.h>
 
 enum int_ops{
 	OP_ADD,

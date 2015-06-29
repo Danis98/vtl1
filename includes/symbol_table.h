@@ -45,7 +45,7 @@ struct symbol_table{
 	symbol_table(){parent==NULL_TABLE; name="s_table";}
 	struct symbol_table* mktable(){
 		struct symbol_table child(this);
-		child.name=name+"_"+std::to_string(subtable_size);
+		child.name=name+"_"+to_string(subtable_size);
 		local_tables.push_back(child);
 		return &(local_tables[subtable_size++]);
 	}

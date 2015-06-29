@@ -16,8 +16,7 @@ $(FRONT_DIR)/parser.o 		\
 $(FRONT_DIR)/tokens.o 		\
 $(FRONT_DIR)/print_funcs.o	\
 $(FRONT_DIR)/s_table.o		\
-$(FRONT_DIR)/typecheck.o	\
-$(FRONT_DIR)/codegen.o
+$(FRONT_DIR)/typecheck.o
 
 GEN_FILES_CLEANUP := 		\
 $(FRONT_DIR)/tokens.cpp 	\
@@ -34,10 +33,22 @@ OBJ_FILES_BACK :=
 OBJ_FILES := $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE) $(OBJ_FILES_BACK)
 
 #################################################
+#		COMMANDS				#
+#################################################
+
+LEX_PRG = 
+
+ifeq ($(OS), Windows_NT)
+	LEX_PRG := flex
+else
+	LEX_PRG := lex
+endif
+
+#################################################
 #		COMPILATION RULES		#
 #################################################
 
-all: vtl
+all: $(info OS: $(OS)) vtl
 
 vtl: front_end middle_end back_end
 	g++ -o $@ $(OBJ_FILES)
@@ -54,7 +65,7 @@ $(FRONT_DIR)/parser.cpp: $(FRONT_DIR)/parser.y
 $(FRONT_DIR)/parser.hpp: $(FRONT_DIR)/parser.cpp
 
 $(FRONT_DIR)/tokens.cpp: $(FRONT_DIR)/tokens.l $(FRONT_DIR)/parser.hpp
-	lex -o $@ $<
+	$(LEX_PRG) -o $@ $<
 
 #Middle-end compilation
 middle_end: $(OBJ_FILES_MIDDLE)
