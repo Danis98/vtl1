@@ -44,7 +44,7 @@ endif
 #		COMPILATION RULES		#
 #################################################
 
-all: $(info OS: $(OS)) vtl
+all: vtl
 
 vtl: front_end middle_end
 	g++ -o $@ $(OBJ_FILES)

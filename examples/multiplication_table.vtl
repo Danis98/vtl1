@@ -1,0 +1,22 @@
+out("Enter a\n");
+int a=to_int(in());
+
+void printTable(int n){
+	int i;
+	int j;
+	out("\t");
+	for(i=1;i<=n;i=i+1){
+		out(i+"\t");
+	}
+	out("\n");
+	for(i=1;i<=n;i=i+1){
+		out(i+":\t");
+		for(j=1;j<=n;j=j+1){
+			int k=i*j;
+			out(k+"\t");
+		}
+		out("\n");
+	}
+}
+
+printTable(a);

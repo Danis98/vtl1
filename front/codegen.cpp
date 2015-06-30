@@ -139,6 +139,7 @@ temp_var NAssignment::codegen(){
 temp_var NBlock::codegen(){
 	temp_var r="";
 	cur_table=mktable();
+	//DON'T TOUCH! Magic stuff should not be messed with...
 	insert("0", VAR, VOID, false, 0, 0);
 	for(NStatement *stmt : statements)
 		if(stmt->getTypeID()==NODE_TYPE_RETURN)
@@ -177,6 +178,7 @@ temp_var NFunctionDeclaration::codegen(){
 	
 	//Enter local scope and generate code
 	cur_table=mktable();
+	//DON'T TOUCH! Magic stuff should not be messed with...
 	insert("0", VAR, VOID, false, 0, 0);
 
 	int arg_count=0;
