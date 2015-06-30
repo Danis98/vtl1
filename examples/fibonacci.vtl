@@ -1,0 +1,14 @@
+out("Enter how many numbers do you want to see\n");
+int num=to_int(in());
+
+int fibonacci(int n){
+	if(n<=2){
+		return 1;
+	}
+	return fibonacci(n-1)+fibonacci(n-2);
+}
+
+int i;
+for(i=1;i<=num;i=i+1){
+	out(i+": "+fibonacci(i)+"\n");
+}

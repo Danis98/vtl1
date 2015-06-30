@@ -162,7 +162,8 @@ temp_var NVariableDeclaration::codegen(){
 		exit(0);
 	}
 	temp_var p=insert(id.name, VAR, get_data_type(type.name), hasExpr, get_width(get_data_type(type.name)), offset)->id;
-	emit(OP_ASSIGN, hasExpr?assignmentExpr->codegen():"", "", p);
+	if(hasExpr)
+		emit(OP_ASSIGN, hasExpr?assignmentExpr->codegen():"", "", p);
 	return p;
 }
 
