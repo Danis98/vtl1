@@ -35,6 +35,23 @@ symbol_table_entry* get_sys_func_data(int id){
 	return &(sys_funcs[id]);
 }
 
+void print_stable(){
+	std::cout<<"[S_TABLE] In table "<<cur_table.name<<"\n";
+	for(int i=0;i<cur_table.size;i++){
+		std::cout<<"[S_TABLE] "<<cur_table.entries[i].name<<"("<<cur_table.entries[i].id<<")\n";
+	}
+	symbol_table table=cur_table;
+
+	do{
+		table=*(table.parent);
+		std::cout<<"[S_TABLE] In table "<<table.name<<":\n";
+		for(int i=0;i<table.size;i++){
+			std::cout<<"[S_TABLE] "<<table.entries[i].name<<"("<<table.entries[i].id<<")\n";
+		}
+	}
+	while(table.parent!=NULL_TABLE);
+}
+
 struct symbol_table_entry *insert(std::string name, enum entry_type type, enum data_type data_type, bool init, int width, int offset){
 	symbol_table_entry entry;
 	entry.name=name;
@@ -53,14 +70,17 @@ void set_initialized(std::string id){
 			return;
 		}
 	}
-	symbol_table *table_ptr=cur_table.parent;
+	symbol_table *table=&cur_table;
 	
-	while(table_ptr!=NULL_TABLE)
-		for(int i=0;i<table_ptr->size;i++)
-			if(table_ptr->entries[i].name==id && table_ptr->entries[i].type==VAR){
-				table_ptr->entries[i].initialized=true;
+	do{
+		table=table->parent;
+		for(int i=0;i<table->size;i++)
+			if(table->entries[i].name==id && table->entries[i].type==VAR){
+				table->entries[i].initialized=true;
 				return;
 			}
+	}
+	while(table->parent!=NULL_TABLE);
 		
 	std::cout<<"[COMPILATION FAILED] Undefined symbol "<<id<<"\n";
 	exit(0);
@@ -76,16 +96,15 @@ symbol_table_entry *lookup(std::string id, enum entry_type type){
 	
 	for(int i=0;i<cur_table.size;i++){
 		if(cur_table.entries[i].name==id && cur_table.entries[i].type==type)
-			return &(cur_table.entries[i]);
+			return &cur_table.entries[i];
 	}
 	symbol_table table=cur_table;
 
 	do{
 		table=*(table.parent);
-		if(table.name==table.parent->name) exit(0);
 		for(int i=0;i<table.size;i++){
 			if(table.entries[i].name==id && table.entries[i].type==type)
-				return &(table.entries[i]);
+				return &table.entries[i];
 		}
 	}
 	while(table.parent!=NULL_TABLE);

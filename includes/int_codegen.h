@@ -4,8 +4,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <utils.h>
+
+extern std::ofstream outfile;
 
 enum int_ops{
 	OP_ADD,
@@ -58,19 +61,21 @@ extern struct intermediate_form int_code;
 
 inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 	if(op==OP_ASSIGN)
-		std::cout<<"\t"<<r<<(a1==""?"":" := "+a1)<<std::endl;
-	else if(op==OP_PARAM || op==OP_RET)
-		std::cout<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<std::endl;
+		outfile<<"\t"<<r<<" := "<<a1<<std::endl;
+	else if(op==OP_PARAM)
+		outfile<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<std::endl;
+	else if(op==OP_RET)
+		outfile<<"\t"<<int_ops_str[(int)op]<<(a1==""?"":" "+a1)<<std::endl;
 	else if(op==OP_LABEL)
-		std::cout<<a1<<":\n";
+		outfile<<a1<<":\n";
 	else if(op==OP_CALL)
-		std::cout<<"\t"<<((r=="")?"":(r+" := "))<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
+		outfile<<"\t"<<((r=="")?"":(r+" := "))<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
 	else if(op==OP_JUMP)
-		std::cout<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<":\n";
+		outfile<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<":\n";
 	else if(op==OP_JUMPIF || op==OP_JUMPNIF)
-		std::cout<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
+		outfile<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
 	else
-		std::cout<<"\t"<<r<<" := "<<a1<<" "<<int_ops_str[(int)op]<<" "<<a2<<std::endl;
+		outfile<<"\t"<<r<<" := "<<a1<<" "<<int_ops_str[(int)op]<<" "<<a2<<std::endl;
 	int_code.instructions.push_back({op, a1, a2, r});
 }
 

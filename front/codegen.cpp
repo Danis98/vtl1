@@ -55,7 +55,8 @@ temp_var NDouble::codegen(){
 }
 
 temp_var NIdentifier::codegen(){
-	return lookup(name, VAR)->id;
+	temp_var p=lookup(name, VAR)->id;	
+	return p;
 }
 
 temp_var NBoolean::codegen(){
@@ -66,9 +67,7 @@ temp_var NBoolean::codegen(){
 
 temp_var NString::codegen(){
 	temp_var t=get_temp();
-	std::cout<<t<<std::endl;
 	emit(OP_ASSIGN, value, "", t);
-	std::cout<<"Lol\n";
 	return t;
 }
 
@@ -131,13 +130,16 @@ temp_var NAssignment::codegen(){
 	temp_var p=e->id;
 	set_initialized(left.name);
 	expr_typecheck(this);
-	emit(OP_ASSIGN, right.codegen(), "", p);
+	temp_var r=right.codegen();
+	emit(OP_ASSIGN, r, "", p);
+	
 	return p;
 }
 
 temp_var NBlock::codegen(){
 	temp_var r="";
 	cur_table=mktable();
+	insert("0", VAR, VOID, false, 0, 0);
 	for(NStatement *stmt : statements)
 		if(stmt->getTypeID()==NODE_TYPE_RETURN)
 			r=stmt->codegen();
@@ -174,6 +176,7 @@ temp_var NFunctionDeclaration::codegen(){
 	
 	//Enter local scope and generate code
 	cur_table=mktable();
+	insert("0", VAR, VOID, false, 0, 0);
 
 	int arg_count=0;
 	for(NVariableDeclaration *arg : arguments){
@@ -187,11 +190,15 @@ temp_var NFunctionDeclaration::codegen(){
 	
 	//Generate and check
 	block.codegen();
+	if(type.name=="void")
+		emit(OP_RET, "", "", "");
 	emit(OP_LABEL, next_main, "", "");
 	
 	isFuncBlock=false;
 
 	cur_table=*(cur_table.parent);
+	
+	return "";
 }
 
 temp_var NIfStatement::codegen(){

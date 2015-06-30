@@ -43,7 +43,7 @@ struct symbol_table{
 	symbol_table(symbol_table *parent) : parent(parent){
 		name=parent->name+"_"+to_string(parent->subtable_size++);	
 	}
-	symbol_table(){parent==NULL_TABLE; name="";}
+	symbol_table(){parent==NULL_TABLE; name="sym";}
 };
 
 extern int offset;
@@ -52,6 +52,7 @@ struct symbol_table_entry *insert(std::string id,enum entry_type type, enum data
 struct symbol_table_entry *lookup(std::string id, enum entry_type type);
 void set_initialized(std::string id);
 inline symbol_table mktable(){return new symbol_table(cur_table);}
+void print_stable();
 
 extern std::string sys_func_names[];
 extern symbol_table_entry sys_funcs[];

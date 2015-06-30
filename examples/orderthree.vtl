@@ -1,0 +1,23 @@
+int a=to_int(in());
+int b=to_int(in());
+int c=to_int(in());
+
+int t;
+
+void orderAB(){
+	t=a;
+	a=b;
+	b=t;
+}
+
+void orderBC(){
+	t=b;
+	b=c;
+	c=t;
+}
+
+orderAB();
+orderBC();
+orderAB();
+
+out(a+" "+b+" "+c+"\n");

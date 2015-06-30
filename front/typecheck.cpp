@@ -16,7 +16,7 @@ enum data_type expr_typecheck(NExpression *expr){
 		//Find the identifier in the symbol. We assume that this is a variable, since a 
 		//methodcall would have been processed at this point (args should be empty)
 		case NODE_TYPE_IDENT:
-			e=lookup(((NIdentifier*)expr)->name, VAR);
+			e=lookup(((NIdentifier*)expr)->name, VAR);	
 			if(e->initialized==false){
 				std::cout<<"[COMPILATION FAILED] Uninitialized symbol "<<e->name<<"\n";
 				exit(0);
@@ -32,13 +32,12 @@ enum data_type expr_typecheck(NExpression *expr){
 			return eval_binop(l, r, ((NBinaryOperator*)expr)->op);
 		case NODE_TYPE_ASSIGN:
 			e=lookup(((NAssignment*)expr)->left.name, VAR);
-			l=lookup(((NAssignment*)expr)->left.name, VAR)->data_type;
+			l=e->data_type;
 			r=expr_typecheck(&((NAssignment*)expr)->right);
 			if(l==r)
 				return l;
 			if(l==DOUBLE && r==INT)
 				return DOUBLE;
-			std::cout<<data_type_names(l)<<" "<<data_type_names(r)<<"\n";
 			std::cout<<"[COMPILATION FAILED] Incompatible assignment.\n";
 			exit(0);
 		case NODE_TYPE_BLOCK:

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <sys/stat.h>
 
@@ -13,6 +14,8 @@ extern NBlock* programBlock;
 //Symbol table
 struct symbol_table cur_table;
 int ind=0;
+//Output file
+std::ofstream outfile;
 
 extern int yyparse();
 
@@ -24,27 +27,31 @@ inline bool file_exists(const char *name){
 }
 
 int main(int argc, char **argv){
-	if(argc<2){
+	if(argc!=2){
 		cout<<"Usage: "<<argv[0]<<"[ -f ] <vtl source file>, "
 		<<argc-1<<" arguments inputted instead\n";
 		return 0;
 	}
 	
-	for(int i=1;i<argc;i++){
-		if(file_exists(argv[i]))
-			yyin=fopen(argv[i],"r");
-		else{
-			cout<<"Invalid argument/s"<<endl;
-			return 0;
-		}
+	std::string filename(argv[1]);
+	
+	filename=filename.substr(0, filename.find_last_of("."));
+	
+	outfile.open(filename+".vvm");
+
+	if(file_exists(argv[1]))
+		yyin=fopen(argv[1],"r");
+	else{
+		cout<<"Invalid argument/s"<<endl;
+		return 0;
 	}
 	
 	//Parse
-	cout<<"Parsing file "<<argv[1]<<"...\n";
+	//cout<<"Parsing file "<<argv[1]<<"...\n";
 	yyparse();
 
 	//Print the resulting AST
-	programBlock->print(0);
+	//programBlock->print(0);
 
 	//Generate intermediate code
 	programBlock->codegen();
