@@ -1,0 +1,26 @@
+	t0 := "Enter a number\n"
+	PARAM t0
+	CALL out 1
+	t1 := CALL in 0
+	PARAM t1
+	t2 := CALL to_int 1
+	sym_0_a := t2
+	t3 := "Enter a string\n"
+	PARAM t3
+	CALL out 1
+	t4 := CALL in 0
+	sym_0_s := t4
+	t5 := 1
+	sym_0_i := t5
+L0:
+	t6 := sym_0_i <= sym_0_a
+	JUMPNIF t6 L1
+	t8 := "\n"
+	t7 := sym_0_s + t8
+	PARAM t7
+	CALL out 1
+	JUMP L0:
+L1:
+	t9 := "Done looping!\n"
+	PARAM t9
+	CALL out 1

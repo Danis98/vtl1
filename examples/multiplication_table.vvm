@@ -1,0 +1,58 @@
+	t0 := "Enter a\n"
+	PARAM t0
+	CALL out 1
+	t1 := CALL in 0
+	PARAM t1
+	t2 := CALL to_int 1
+	sym_0_a := t2
+	JUMP L0:
+sym_0_f_printTable:
+	sym_0_0_n := param_0
+	t3 := "\t"
+	PARAM t3
+	CALL out 1
+	t4 := 1
+	sym_0_0_0_i := t4
+L1:
+	t5 := sym_0_0_0_i <= sym_0_0_n
+	JUMPNIF t5 L2
+	t7 := "\t"
+	t6 := sym_0_0_0_i + t7
+	PARAM t6
+	CALL out 1
+	JUMP L1:
+L2:
+	t8 := "\n"
+	PARAM t8
+	CALL out 1
+	t9 := 1
+	sym_0_0_0_i := t9
+L3:
+	t10 := sym_0_0_0_i <= sym_0_0_n
+	JUMPNIF t10 L4
+	t12 := ":\t"
+	t11 := sym_0_0_0_i + t12
+	PARAM t11
+	CALL out 1
+	t13 := 1
+	sym_0_0_0_j := t13
+L5:
+	t14 := sym_0_0_0_j <= sym_0_0_n
+	JUMPNIF t14 L6
+	t15 := sym_0_0_0_i * sym_0_0_0_j
+	sym_0_0_0_1_0_k := t15
+	t17 := "\t"
+	t16 := sym_0_0_0_1_0_k + t17
+	PARAM t16
+	CALL out 1
+	JUMP L5:
+L6:
+	t18 := "\n"
+	PARAM t18
+	CALL out 1
+	JUMP L3:
+L4:
+	RETURN
+L0:
+	PARAM sym_0_a
+	CALL sym_0_f_printTable 1

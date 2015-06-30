@@ -1,0 +1,14 @@
+	t0 := CALL in 0
+	PARAM t0
+	t1 := CALL to_int 1
+	sym_0_num := t1
+	t2 := 0
+	sym_0_i := t2
+L0:
+	t3 := sym_0_i < sym_0_num
+	JUMPNIF t3 L1
+	t4 := "Hello world!\n"
+	PARAM t4
+	CALL out 1
+	JUMP L0:
+L1:

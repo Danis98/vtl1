@@ -1,0 +1,31 @@
+	t0 := CALL in 0
+	PARAM t0
+	t1 := CALL to_double 1
+	sym_0_a := t1
+	t2 := CALL in 0
+	PARAM t2
+	t3 := CALL to_double 1
+	sym_0_b := t3
+	t5 := " = "
+	t8 := " - "
+	t7 := sym_0_a + t8
+	t6 := t7 + sym_0_b
+	t4 := t6 + t5
+	PARAM t4
+	CALL out 1
+	PARAM sym_0_b
+	t10 := 2
+	PARAM t10
+	t11 := CALL pow 2
+	PARAM sym_0_a
+	t12 := 2
+	PARAM t12
+	t13 := CALL pow 2
+	t9 := t13 + t11
+	PARAM t9
+	t14 := CALL sqrt 1
+	sym_0_c := t14
+	t16 := "\n"
+	t15 := sym_0_c + t16
+	PARAM t15
+	CALL out 1

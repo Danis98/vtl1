@@ -1,0 +1,3 @@
+	t0 := "Hello world!\n"
+	PARAM t0
+	CALL out 1

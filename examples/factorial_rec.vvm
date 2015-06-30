@@ -1,0 +1,28 @@
+	t0 := CALL in 0
+	PARAM t0
+	t1 := CALL to_int 1
+	sym_0_num := t1
+	JUMP L0:
+sym_0_f_factorial:
+	sym_0_0_n := param_0
+	t3 := 2
+	t2 := sym_0_0_n < t3
+	JUMPNIF t2 L1
+	t4 := 1
+	RETURN t4
+	JUMP L2:
+L1:
+L2:
+	t7 := 1
+	t6 := sym_0_0_n - t7
+	PARAM t6
+	t8 := CALL sym_0_f_factorial 1
+	t5 := sym_0_0_n * t8
+	RETURN t5
+L0:
+	PARAM sym_0_num
+	t9 := CALL sym_0_f_factorial 1
+	PARAM t9
+	t10 := CALL to_string 1
+	PARAM t10
+	CALL out 1
