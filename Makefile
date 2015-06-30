@@ -7,8 +7,6 @@ INCLUDES =./includes/
 
 #VTL1 front-end directory
 FRONT_DIR := ./front
-#VTL1 back-end directory
-BACK_DIR := ./back/i368
 
 #front-end object files
 OBJ_FILES_FRONT := 		\
@@ -28,10 +26,7 @@ $(FRONT_DIR)/parser.hpp
 OBJ_FILES_MIDDLE := 	\
 main.o
 
-#back-end object files
-OBJ_FILES_BACK := 
-
-OBJ_FILES := $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE) $(OBJ_FILES_BACK)
+OBJ_FILES := $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE)
 
 #################################################
 #		COMMANDS				#
@@ -51,7 +46,7 @@ endif
 
 all: $(info OS: $(OS)) vtl
 
-vtl: front_end middle_end back_end
+vtl: front_end middle_end
 	g++ -o $@ $(OBJ_FILES)
 
 %.o: %.cpp
@@ -70,9 +65,6 @@ $(FRONT_DIR)/tokens.cpp: $(FRONT_DIR)/tokens.l $(FRONT_DIR)/parser.hpp
 
 #Middle-end compilation
 middle_end: $(OBJ_FILES_MIDDLE)
-
-#Back-end compilation
-back_end: $(OBJ_FILES_BACK)
 
 #Cleaning rules
 clean: clean_tmp

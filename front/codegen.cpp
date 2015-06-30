@@ -32,11 +32,14 @@ int offset=0;
 int occupied_temps=0, occupied_labels=0;
 
 temp_var get_temp(){
-	return "t"+to_string(occupied_temps++);
+	std::string n=to_string(occupied_temps++);
+	temp_var t="t"+n;
+	return t;
 }
 
 label get_label(){
-	return "L"+to_string(occupied_labels++);
+	label L="L"+to_string(occupied_labels++);
+	return L;
 }
 
 temp_var NInteger::codegen(){
@@ -63,7 +66,9 @@ temp_var NBoolean::codegen(){
 
 temp_var NString::codegen(){
 	temp_var t=get_temp();
+	std::cout<<t<<std::endl;
 	emit(OP_ASSIGN, value, "", t);
+	std::cout<<"Lol\n";
 	return t;
 }
 
@@ -71,8 +76,9 @@ temp_var NMethodCall::codegen(){
 	for(NExpression* arg : arguments)
 		emit(OP_PARAM, arg->codegen(), "", "");
 	struct symbol_table_entry *e=lookup(id.name, FUNC);
-	temp_var t=e->data_type==VOID?"":get_temp();
 	temp_var func_id=e->id;
+	enum data_type dt=e->data_type;
+	temp_var t=dt==VOID?"":get_temp();
 	emit(OP_CALL, func_id, std::to_string(arguments.size()), t);
 	return t;
 }
@@ -154,11 +160,14 @@ temp_var NVariableDeclaration::codegen(){
 		exit(0);
 	}
 	temp_var p=insert(id.name, VAR, get_data_type(type.name), hasExpr, get_width(get_data_type(type.name)), offset)->id;
-	emit(OP_ASSIGN, assignmentExpr->codegen(), "", p);
+	emit(OP_ASSIGN, hasExpr?assignmentExpr->codegen():"", "", p);
 	return p;
 }
 
 temp_var NFunctionDeclaration::codegen(){
+	//Jump past the function declaration when executing
+	label next_main=get_label();
+	emit(OP_JUMP, next_main, "", "");
 	//Function label
 	label func_label=insert(id.name, FUNC, get_data_type(type.name), true, 0, 0)->id;
 	emit(OP_LABEL, func_label, "", "");
@@ -178,6 +187,7 @@ temp_var NFunctionDeclaration::codegen(){
 	
 	//Generate and check
 	block.codegen();
+	emit(OP_LABEL, next_main, "", "");
 	
 	isFuncBlock=false;
 
@@ -218,6 +228,7 @@ temp_var NWhileStatement::codegen(){
 	temp_var e=condition.codegen();
 	emit(OP_JUMPNIF, e, next, "");
 	whileBlock.codegen();
+	emit(OP_JUMP, begin, "", "");
 	emit(OP_LABEL, next, "", "");
 	return "";
 }

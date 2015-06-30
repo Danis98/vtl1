@@ -39,9 +39,10 @@
 %type <stmt> stmt var_decl func_decl if_stmt while_stmt for_stmt return_stmt
 %type <token> comparison
 
+
+%left TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 %left TPLUS TMINUS
 %left TMUL TDIV
-%left TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
 
 %start program
 
@@ -70,6 +71,7 @@ while_stmt : TWHILE TLPAREN expr TRPAREN block {$$=new NWhileStatement(*$3, *$5)
 	;
 
 return_stmt : TRETURN expr {$$=new NReturnStatement(*$2);}
+	;
 
 for_stmt : TFOR TLPAREN expr TSEMI expr TSEMI expr TRPAREN block 
 		{$$=new NForStatement($3, $5, $7, *$9);}
@@ -105,11 +107,11 @@ string	: TSTRING {$$=new NString(*$1); delete $1;}
 expr	: ident TEQUAL expr {$$=new NAssignment(*$<ident>1, *$3);}
 	| term
 	| expr comparison expr {$$=new NBinaryOperator(*$1, $2, *$3);}
-	| expr TPLUS expr {$$=new NBinaryOperator(*$1, $2, *$3);}
-	| expr TMINUS expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TMOD expr {$$=new NBinaryOperator(*$1, $2, *$3);}
 	| expr TMUL expr {$$=new NBinaryOperator(*$1, $2, *$3);}
 	| expr TDIV expr {$$=new NBinaryOperator(*$1, $2, *$3);}
-	| expr TMOD expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TPLUS expr {$$=new NBinaryOperator(*$1, $2, *$3);}
+	| expr TMINUS expr {$$=new NBinaryOperator(*$1, $2, *$3);}
 	| TLPAREN expr TRPAREN {$$=$2;}
 	;
 

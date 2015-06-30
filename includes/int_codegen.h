@@ -58,15 +58,15 @@ extern struct intermediate_form int_code;
 
 inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 	if(op==OP_ASSIGN)
-		std::cout<<"\t"<<r<<" := "<<a1<<std::endl;
+		std::cout<<"\t"<<r<<(a1==""?"":" := "+a1)<<std::endl;
 	else if(op==OP_PARAM || op==OP_RET)
 		std::cout<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<std::endl;
 	else if(op==OP_LABEL)
 		std::cout<<a1<<":\n";
 	else if(op==OP_CALL)
-		std::cout<<"\t"<<r<<" := "<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
+		std::cout<<"\t"<<((r=="")?"":(r+" := "))<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
 	else if(op==OP_JUMP)
-		std::cout<<"\t"<<a1<<":\n";
+		std::cout<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<":\n";
 	else if(op==OP_JUMPIF || op==OP_JUMPNIF)
 		std::cout<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
 	else

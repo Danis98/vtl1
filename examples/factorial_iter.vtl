@@ -1,0 +1,12 @@
+int n=to_int(in());
+
+int factorial(int n){
+	int f=1;
+	int i;
+	for(i=2;i<=n;i=i+1){
+		f=f*i;
+	}
+	return f;
+}
+
+out(to_string(factorial(n)));

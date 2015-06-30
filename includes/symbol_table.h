@@ -41,7 +41,7 @@ struct symbol_table{
 	symbol_table *parent;
 	std::vector<symbol_table_entry> entries;
 	symbol_table(symbol_table *parent) : parent(parent){
-		name=parent->name+"_"+to_string(subtable_size++);	
+		name=parent->name+"_"+to_string(parent->subtable_size++);	
 	}
 	symbol_table(){parent==NULL_TABLE; name="";}
 };
@@ -52,5 +52,12 @@ struct symbol_table_entry *insert(std::string id,enum entry_type type, enum data
 struct symbol_table_entry *lookup(std::string id, enum entry_type type);
 void set_initialized(std::string id);
 inline symbol_table mktable(){return new symbol_table(cur_table);}
+
+extern std::string sys_func_names[];
+extern symbol_table_entry sys_funcs[];
+extern int sys_funcs_num;
+
+int check_sys(std::string id);
+symbol_table_entry* get_sys_func_data(int id);
 
 #endif

@@ -5,12 +5,11 @@
 #include <iostream>
 #include <sstream>
 
-template <typename T>
-inline std::string to_string ( T Number )
-{
+inline std::string to_string (int num){
 	std::stringstream ss;
-	ss << Number;
-	return ss.str();
+	ss << num;
+	std::string n=ss.str();
+	return n;
 }
 
 #endif
