@@ -4,7 +4,7 @@
 enum data_type expected;
 bool isFuncBlock=false;
 
-std::string int_ops_str[]={
+std::string int_ops_dbg[]={
 	"+",
 	"-",
 	"*",
@@ -23,6 +23,28 @@ std::string int_ops_str[]={
 	"<=",
 	">",
 	">=",
+	"RETURN"
+};
+
+std::string int_ops_str[]={
+	"PLUS",
+	"SUB",
+	"MULT",
+	"DIV",
+	"MOD",
+	"ASSIGN",
+	"PARAM",
+	"CALL",
+	"JUMP",
+	"JUMPIF",
+	"JUMPNIF",
+	"LABEL",
+	"EQUAL",
+	"NEQUAL",
+	"LESS",
+	"LESSEQ",
+	"GREAT",
+	"GREATEQ",
 	"RETURN"
 };
 

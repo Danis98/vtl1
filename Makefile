@@ -68,7 +68,7 @@ middle_end: $(OBJ_FILES_MIDDLE)
 
 #Cleaning rules
 clean: clean_tmp
-	rm -f vtl $(FRONT_DIR)/parser.output examples/*.vvm
+	rm -f vtl $(FRONT_DIR)/parser.output examples/*.vvm examples/*.vvm-dbg
 
 clean_tmp:
 	rm -rf $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE) $(GEN_FILES_CLEANUP) *~

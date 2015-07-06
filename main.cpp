@@ -16,6 +16,8 @@ struct symbol_table cur_table;
 int ind=0;
 //Output file
 std::ofstream outfile;
+//Debug option for more human-readable code
+bool debug;
 
 extern int yyparse();
 
@@ -27,25 +29,37 @@ inline bool file_exists(const char *name){
 }
 
 int main(int argc, char **argv){
-	if(argc!=2){
-		cout<<"Usage: "<<argv[0]<<"[ -f ] <vtl source file>, "
+	if(argc<2 || argc>3){
+		cout<<"Usage: "<<argv[0]<<" <vtl source file> [-debug], "
 		<<argc-1<<" arguments inputted instead\n";
 		return 0;
 	}
 	
-	std::string filename(argv[1]);
+	bool inputFileSubmitted=false;
+	std::string filename;
+	for(int i=1;i<argc;i++){
+		if(strcmp(argv[i], "-debug")==0){
+			debug=true;
+		}
+		else{
+			if(inputFileSubmitted)
+				cout<<"[COMPILATION FAILED] Invalid arguments\n";
+			filename=argv[i];
+			inputFileSubmitted=true;
+		}
+	}
 	
-	filename=filename.substr(0, filename.find_last_of("."));
-	
-	outfile.open(filename+".vvm");
-
-	if(file_exists(argv[1]))
-		yyin=fopen(argv[1],"r");
+	if(file_exists(filename.c_str()))
+		yyin=fopen(filename.c_str(),"r");
 	else{
-		cout<<"Invalid argument/s"<<endl;
+		cout<<"[COMPILATION FALED] Source file not found\n";
 		return 0;
 	}
 	
+	filename=filename.substr(0, filename.find_last_of("."));
+	
+	outfile.open(filename+".vvm"+(debug?"-dbg":""));
+
 	//Parse
 	//cout<<"Parsing file "<<argv[1]<<"...\n";
 	yyparse();

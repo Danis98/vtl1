@@ -1,26 +1,26 @@
-	t0 := CALL in 0
-	PARAM t0
-	t1 := CALL to_double 1
-	sym_0_a := t1
-	t2 := CALL in 0
-	PARAM t2
-	t3 := CALL to_double 1
-	sym_0_b := t3
-	t6 := sym_0_a + " - "
-	t5 := t6 + sym_0_b
-	t4 := t5 + " = "
-	PARAM t4
-	CALL out 1
-	PARAM sym_0_b
-	PARAM 2
-	t8 := CALL pow 2
-	PARAM sym_0_a
-	PARAM 2
-	t9 := CALL pow 2
-	t7 := t9 + t8
-	PARAM t7
-	t10 := CALL sqrt 1
-	sym_0_c := t10
-	t11 := sym_0_c + "\n"
-	PARAM t11
-	CALL out 1
+CALL in 0 t0
+PARAM t0  
+CALL to_double 1 t1
+ASSIGN t1  sym_0_a
+CALL in 0 t2
+PARAM t2  
+CALL to_double 1 t3
+ASSIGN t3  sym_0_b
+PLUS sym_0_a " - " t6
+PLUS t6 sym_0_b t5
+PLUS t5 " = " t4
+PARAM t4  
+CALL out 1 
+PARAM sym_0_b  
+PARAM 2  
+CALL pow 2 t8
+PARAM sym_0_a  
+PARAM 2  
+CALL pow 2 t9
+PLUS t9 t8 t7
+PARAM t7  
+CALL sqrt 1 t10
+ASSIGN t10  sym_0_c
+PLUS sym_0_c "\n" t11
+PARAM t11  
+CALL out 1 

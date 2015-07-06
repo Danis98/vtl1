@@ -1,2 +1,2 @@
-	PARAM "Hello world!\n"
-	CALL out 1
+PARAM "Hello world!\n"  
+CALL out 1 

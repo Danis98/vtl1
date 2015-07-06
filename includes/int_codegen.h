@@ -9,6 +9,7 @@
 #include <utils.h>
 
 extern std::ofstream outfile;
+extern bool debug;
 
 enum int_ops{
 	OP_ADD,
@@ -33,6 +34,7 @@ enum int_ops{
 };
 
 extern std::string int_ops_str[];
+extern std::string int_ops_dbg[];
 
 typedef  std::string temp_var;
 typedef std::string label;
@@ -60,22 +62,27 @@ struct intermediate_form{
 extern struct intermediate_form int_code;
 
 inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
-	if(op==OP_ASSIGN)
-		outfile<<"\t"<<r<<" := "<<a1<<std::endl;
-	else if(op==OP_PARAM)
-		outfile<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<std::endl;
-	else if(op==OP_RET)
-		outfile<<"\t"<<int_ops_str[(int)op]<<(a1==""?"":" "+a1)<<std::endl;
-	else if(op==OP_LABEL)
-		outfile<<a1<<":\n";
-	else if(op==OP_CALL)
-		outfile<<"\t"<<((r=="")?"":(r+" := "))<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
-	else if(op==OP_JUMP)
-		outfile<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<":\n";
-	else if(op==OP_JUMPIF || op==OP_JUMPNIF)
-		outfile<<"\t"<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
-	else
-		outfile<<"\t"<<r<<" := "<<a1<<" "<<int_ops_str[(int)op]<<" "<<a2<<std::endl;
+	if(!debug){
+		outfile<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<" "<<r<<"\n";
+	}
+	else{
+		if(op==OP_ASSIGN)
+			outfile<<"\t"<<r<<" := "<<a1<<std::endl;
+		else if(op==OP_PARAM)
+			outfile<<"\t"<<int_ops_dbg[(int)op]<<" "<<a1<<std::endl;
+		else if(op==OP_RET)
+			outfile<<"\t"<<int_ops_dbg[(int)op]<<(a1==""?"":" "+a1)<<std::endl;
+		else if(op==OP_LABEL)
+			outfile<<a1<<":\n";
+		else if(op==OP_CALL)
+			outfile<<"\t"<<((r=="")?"":(r+" := "))<<int_ops_dbg[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
+		else if(op==OP_JUMP)
+			outfile<<"\t"<<int_ops_dbg[(int)op]<<" "<<a1<<":\n";
+		else if(op==OP_JUMPIF || op==OP_JUMPNIF)
+			outfile<<"\t"<<int_ops_dbg[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
+		else
+			outfile<<"\t"<<r<<" := "<<a1<<" "<<int_ops_dbg[(int)op]<<" "<<a2<<std::endl;
+	}
 	int_code.instructions.push_back({op, a1, a2, r});
 }
 
