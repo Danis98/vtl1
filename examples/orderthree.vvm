@@ -27,13 +27,10 @@ L1:
 	CALL sym_0_f_orderAB 0
 	CALL sym_0_f_orderBC 0
 	CALL sym_0_f_orderAB 0
-	t7 := "\n"
-	t10 := " "
-	t13 := " "
-	t12 := sym_0_a + t13
-	t11 := t12 + sym_0_b
-	t9 := t11 + t10
-	t8 := t9 + sym_0_c
-	t6 := t8 + t7
+	t10 := sym_0_a + " "
+	t9 := t10 + sym_0_b
+	t8 := t9 + " "
+	t7 := t8 + sym_0_c
+	t6 := t7 + "\n"
 	PARAM t6
 	CALL out 1

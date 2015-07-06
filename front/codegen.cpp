@@ -43,15 +43,11 @@ label get_label(){
 }
 
 temp_var NInteger::codegen(){
-	temp_var t=get_temp();
-	emit(OP_ASSIGN, to_string(value), "", t);
-	return t;
+	return to_string(value);
 }
 
 temp_var NDouble::codegen(){
-	temp_var t=get_temp();
-	emit(OP_ASSIGN, to_string(value), "", t);
-	return t;
+	return to_string(value);
 }
 
 temp_var NIdentifier::codegen(){
@@ -60,15 +56,11 @@ temp_var NIdentifier::codegen(){
 }
 
 temp_var NBoolean::codegen(){
-	temp_var t=get_temp();
-	emit(OP_ASSIGN, value?"true":"false", "", t);
-	return t;
+	return value?"true":"false";
 }
 
 temp_var NString::codegen(){
-	temp_var t=get_temp();
-	emit(OP_ASSIGN, value, "", t);
-	return t;
+	return value;
 }
 
 temp_var NMethodCall::codegen(){

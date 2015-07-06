@@ -1,9 +1,6 @@
-	t0 := 0
-	sym_0_c := t0
-	t1 := 0
-	sym_0_b := t1
-	t2 := 0
-	sym_0_a := t2
+	sym_0_c := 0
+	sym_0_b := 0
+	sym_0_a := 0
 	JUMP L0:
 sym_0_f_lol:
 	sym_0_b := sym_0_a
@@ -11,4 +8,4 @@ sym_0_f_lol:
 	sym_0_c := sym_0_b
 	RETURN sym_0_b
 L0:
-	t3 := CALL sym_0_f_lol 0
+	t0 := CALL sym_0_f_lol 0
