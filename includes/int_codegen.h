@@ -63,7 +63,7 @@ extern struct intermediate_form int_code;
 
 inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 	if(!debug){
-		outfile<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<" "<<r<<"\n";
+		outfile<<int_ops_str[(int)op]<<" "<<((op==OP_RET && a1=="")?"null":a1)<<" "<<a2<<" "<<r<<"\n";
 	}
 	else{
 		if(op==OP_ASSIGN)
@@ -71,7 +71,7 @@ inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 		else if(op==OP_PARAM)
 			outfile<<"\t"<<int_ops_dbg[(int)op]<<" "<<a1<<std::endl;
 		else if(op==OP_RET)
-			outfile<<"\t"<<int_ops_dbg[(int)op]<<(a1==""?"":" "+a1)<<std::endl;
+			outfile<<"\t"<<int_ops_dbg[(int)op]<<(a1==""?" null":" "+a1)<<std::endl;
 		else if(op==OP_LABEL)
 			outfile<<a1<<":\n";
 		else if(op==OP_CALL)
