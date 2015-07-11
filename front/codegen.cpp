@@ -92,7 +92,7 @@ temp_var NMethodCall::codegen(){
 	temp_var func_id=e->id;
 	enum data_type dt=e->data_type;
 	temp_var t=dt==VOID?"":get_temp();
-	emit(OP_CALL, func_id, std::to_string(arguments.size()), t);
+	emit(OP_CALL, func_id, to_string(arguments.size()), t);
 	return t;
 }
 

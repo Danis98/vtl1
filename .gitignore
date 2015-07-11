@@ -1,3 +1,8 @@
 *~
+*.vvm
+*.vvm-dbg
+
 vtl
+vtl.exe
+
 front/parser.output

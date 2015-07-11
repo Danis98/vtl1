@@ -63,12 +63,17 @@ extern struct intermediate_form int_code;
 
 inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 	if(!debug){
-		outfile<<int_ops_str[(int)op]<<" "<<((op==OP_RET && a1=="")?"null":a1)<<" "<<a2<<" "<<r<<"\n";
+		if(op==OP_RET)
+			outfile<<int_ops_str[(int)op]<<" "<<(a1==""?"null":a1)<<" "<<a2<<" "<<r<<"\n";
+		else if(op==OP_CALL)
+			outfile<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<" "<<(r==""?"null":r)<<"\n";
+		else
+			outfile<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<" "<<r<<"\n";
 	}
 	else{
 		if(op==OP_ASSIGN)
 			outfile<<"\t"<<r<<" := "<<a1<<std::endl;
-		else if(op==OP_PARAM)
+		else if(op==OP_PARAM || op==OP_JUMP)
 			outfile<<"\t"<<int_ops_dbg[(int)op]<<" "<<a1<<std::endl;
 		else if(op==OP_RET)
 			outfile<<"\t"<<int_ops_dbg[(int)op]<<(a1==""?" null":" "+a1)<<std::endl;
@@ -76,8 +81,6 @@ inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 			outfile<<a1<<":\n";
 		else if(op==OP_CALL)
 			outfile<<"\t"<<((r=="")?"":(r+" := "))<<int_ops_dbg[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
-		else if(op==OP_JUMP)
-			outfile<<"\t"<<int_ops_dbg[(int)op]<<" "<<a1<<":\n";
 		else if(op==OP_JUMPIF || op==OP_JUMPNIF)
 			outfile<<"\t"<<int_ops_dbg[(int)op]<<" "<<a1<<" "<<a2<<std::endl;
 		else

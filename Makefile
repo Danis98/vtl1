@@ -2,7 +2,7 @@
 #		VARIABLE DEFINITIONS		#
 #################################################
 
-CPPFLAGS =-std=c++11
+CPPFLAGS =-std=gnu++11
 INCLUDES =./includes/
 
 #VTL1 front-end directory
@@ -10,8 +10,8 @@ FRONT_DIR := ./front
 
 #front-end object files
 OBJ_FILES_FRONT := 		\
-$(FRONT_DIR)/parser.o 		\
 $(FRONT_DIR)/tokens.o 		\
+$(FRONT_DIR)/parser.o 		\
 $(FRONT_DIR)/print_funcs.o	\
 $(FRONT_DIR)/s_table.o		\
 $(FRONT_DIR)/typecheck.o	\
@@ -32,10 +32,9 @@ OBJ_FILES := $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE)
 #		COMMANDS				#
 #################################################
 
-LEX_PRG = 
-
 ifeq ($(OS), Windows_NT)
 	LEX_PRG := flex
+	EXEC_EXTENSION := .exe
 else
 	LEX_PRG := lex
 endif
@@ -47,7 +46,7 @@ endif
 all: vtl
 
 vtl: front_end middle_end
-	g++ -o $@ $(OBJ_FILES)
+	g++ -o $@$(EXEC_EXTENSION) $(OBJ_FILES)
 
 %.o: %.cpp
 	g++ -c $(CPPFLAGS) -o $@ $< -I$(INCLUDES)
@@ -68,7 +67,7 @@ middle_end: $(OBJ_FILES_MIDDLE)
 
 #Cleaning rules
 clean: clean_tmp
-	rm -f vtl $(FRONT_DIR)/parser.output examples/*.vvm examples/*.vvm-dbg
+	rm -f vtl$(EXEC_EXTENSION) $(FRONT_DIR)/parser.output examples/*.vvm examples/*.vvm-dbg
 
 clean_tmp:
 	rm -rf $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE) $(GEN_FILES_CLEANUP) *~

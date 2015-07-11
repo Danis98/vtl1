@@ -32,6 +32,8 @@ int main(int argc, char **argv){
 	if(argc<2 || argc>3){
 		cout<<"Usage: "<<argv[0]<<" <vtl source file> [-debug], "
 		<<argc-1<<" arguments inputted instead\n";
+		for(int i=0;i<argc;i++)
+			cout<<argv[i]<<"\n";
 		return 0;
 	}
 	
