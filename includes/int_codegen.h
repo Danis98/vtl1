@@ -66,7 +66,7 @@ inline void emit(enum int_ops op, temp_var a1, temp_var a2, temp_var r){
 		if(op==OP_RET)
 			outfile<<int_ops_str[(int)op]<<" "<<(a1==""?"null":a1)<<" "<<a2<<" "<<r<<"\n";
 		else if(op==OP_CALL)
-			outfile<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<" "<<(r==""?"null":r)<<"\n";
+			outfile<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<" "<<r<<"\n";
 		else
 			outfile<<int_ops_str[(int)op]<<" "<<a1<<" "<<a2<<" "<<r<<"\n";
 	}

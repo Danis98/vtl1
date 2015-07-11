@@ -91,7 +91,7 @@ temp_var NMethodCall::codegen(){
 	struct symbol_table_entry *e=lookup(id.name, FUNC);
 	temp_var func_id=e->id;
 	enum data_type dt=e->data_type;
-	temp_var t=dt==VOID?"":get_temp();
+	temp_var t=(dt==VOID)?"":get_temp();
 	emit(OP_CALL, func_id, to_string(arguments.size()), t);
 	return t;
 }
