@@ -1,0 +1,19 @@
+out("Input n: ");
+int n=to_int(in());
+out("Input m: ");
+int m=to_int(in());
+
+int factorial(int a){
+	int f=1;
+	int i;
+	for(i=2;i<=a;i=i+1){
+		f=f*i;
+	}
+	return f;
+}
+
+int binomial(int n, int m){
+	return factorial(n)/(factorial(m)*factorial(n-m));
+}
+
+out("Binomial (n m) : "+binomial(n, m)+"\n");

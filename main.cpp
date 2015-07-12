@@ -17,7 +17,9 @@ int ind=0;
 //Output file
 std::ofstream outfile;
 //Debug option for more human-readable code
-bool debug;
+bool debug=false;
+//Print the AST
+bool ast_dbg=false;
 
 extern int yyparse();
 
@@ -29,7 +31,7 @@ inline bool file_exists(const char *name){
 }
 
 int main(int argc, char **argv){
-	if(argc<2 || argc>3){
+	if(argc<2 || argc>4){
 		cout<<"Usage: "<<argv[0]<<" <vtl source file> [-debug], "
 		<<argc-1<<" arguments inputted instead\n";
 		for(int i=0;i<argc;i++)
@@ -40,9 +42,10 @@ int main(int argc, char **argv){
 	bool inputFileSubmitted=false;
 	std::string filename;
 	for(int i=1;i<argc;i++){
-		if(strcmp(argv[i], "-debug")==0){
+		if(strcmp(argv[i], "-debug")==0)
 			debug=true;
-		}
+		else if(strcmp(argv[i], "-print-ast")==0)
+			ast_dbg=true;
 		else{
 			if(inputFileSubmitted)
 				cout<<"[COMPILATION FAILED] Invalid arguments\n";
@@ -67,7 +70,8 @@ int main(int argc, char **argv){
 	yyparse();
 
 	//Print the resulting AST
-	//programBlock->print(0);
+	if(ast_dbg)
+		programBlock->print(0);
 
 	//Generate intermediate code
 	programBlock->codegen();

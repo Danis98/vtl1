@@ -14,6 +14,9 @@ case $key in
 	-f|--force)
 		force_recompile=true
 	;;
+	-print-ast)
+		compile_args="$compile_args -print-ast"
+	;;
 	*)
 		echo "Invalid argument $1"
 		exit 1

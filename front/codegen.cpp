@@ -199,6 +199,7 @@ temp_var NFunctionDeclaration::codegen(){
 	for(NVariableDeclaration *arg : arguments){
 		temp_var p_id=insert(arg->id.name, VAR, get_data_type(arg->type.name), true, get_width(get_data_type(arg->type.name)), offset)->id;
 		emit(OP_ASSIGN, "param_"+to_string(arg_count), "", p_id);
+		arg_count++;
 	}
 	
 	//Setup for typecheck

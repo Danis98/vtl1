@@ -66,8 +66,11 @@ $(FRONT_DIR)/tokens.cpp: $(FRONT_DIR)/tokens.l $(FRONT_DIR)/parser.hpp
 middle_end: $(OBJ_FILES_MIDDLE)
 
 #Cleaning rules
-clean: clean_tmp
-	rm -f vtl$(EXEC_EXTENSION) $(FRONT_DIR)/parser.output examples/*.vvm examples/*.vvm-dbg
+clean: clean_tmp clean_compiled
+	rm -f vtl$(EXEC_EXTENSION) $(FRONT_DIR)/parser.output
+
+clean_compiled:
+	rm -rf examples/*.vvm examples/*.vvm-dbg
 
 clean_tmp:
 	rm -rf $(OBJ_FILES_FRONT) $(OBJ_FILES_MIDDLE) $(GEN_FILES_CLEANUP) *~
