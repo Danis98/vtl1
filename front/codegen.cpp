@@ -86,8 +86,8 @@ temp_var NString::codegen(){
 }
 
 temp_var NMethodCall::codegen(){
-	for(NExpression* arg : arguments)
-		emit(OP_PARAM, arg->codegen(), "", "");
+	for(int i=arguments.size()-1;i>=0;i--)
+		emit(OP_PARAM, arguments[i]->codegen(), "", "");
 	struct symbol_table_entry *e=lookup(id.name, FUNC);
 	temp_var func_id=e->id;
 	enum data_type dt=e->data_type;
