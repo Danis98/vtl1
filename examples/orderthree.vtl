@@ -5,15 +5,19 @@ int c=to_int(in());
 int t;
 
 void orderAB(){
-	t=a;
-	a=b;
-	b=t;
+	if(a>b){
+		t=a;
+		a=b;
+		b=t;
+	}
 }
 
 void orderBC(){
-	t=b;
-	b=c;
-	c=t;
+	if(b>c){
+		t=b;
+		b=c;
+		c=t;
+	}
 }
 
 orderAB();

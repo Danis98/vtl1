@@ -38,7 +38,9 @@ enum data_type expr_typecheck(NExpression *expr){
 				return l;
 			if(l==DOUBLE && r==INT)
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED] Incompatible assignment.\n";
+			std::cout<<"[COMPILATION FAILED] Incompatible assignment.\n"
+			<<" {"<<data_type_names(l)<<","
+			<<data_type_names(r)<<"}\n";
 			exit(0);
 		case NODE_TYPE_BLOCK:
 			for(NStatement* stmt : ((NBlock*)expr)->statements)

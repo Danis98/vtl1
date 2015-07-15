@@ -5,7 +5,8 @@
 #include <iostream>
 #include <sstream>
 
-inline std::string to_string (int num){
+template <typename T>
+inline std::string to_string (T num){
 	std::stringstream ss;
 	ss << num;
 	std::string n=ss.str();
