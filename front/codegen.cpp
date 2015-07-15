@@ -172,12 +172,14 @@ temp_var NExpressionStatement::codegen(){
 }
 
 temp_var NVariableDeclaration::codegen(){
-	data_type expr_type=expr_typecheck(assignmentExpr);
-	temp_var p=insert(id.name, VAR, get_data_type(type.name), hasExpr, get_width(get_data_type(type.name)), offset)->id;
-	if(hasExpr && (get_data_type(type.name)!=expr_typecheck(new NAssignment(id, *assignmentExpr)))){
+	data_type expr_type;
+	if(hasExpr)
+		expr_type=expr_typecheck(assignmentExpr);
+	if(hasExpr && (get_data_type(type.name)!=expr_type || (get_data_type(type.name)==DOUBLE && expr_type==INT))){
 		std::cout<<"[COMPILATION FAILED] Incompatible assignment\n";
 		exit(0);
 	}
+	temp_var p=insert(id.name, VAR, get_data_type(type.name), hasExpr, get_width(get_data_type(type.name)), offset)->id;
 	if(hasExpr)
 		emit(OP_ASSIGN, hasExpr?assignmentExpr->codegen():"", "", p);
 	return p;
