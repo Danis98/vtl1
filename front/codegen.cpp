@@ -241,6 +241,7 @@ temp_var NForStatement::codegen(){
 	temp_var e=condition->codegen();
 	emit(OP_JUMPNIF, e, next, "");
 	forBlock.codegen();
+	incrExpr->codegen();
 	emit(OP_JUMP, begin, "", "");
 	emit(OP_LABEL, next, "", "");
 	return "";
