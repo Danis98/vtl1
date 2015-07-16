@@ -1,5 +1,6 @@
 #include <node.h>
 #include "parser.hpp"
+#include <typecheck.h>
 
 enum data_type expected;
 bool isFuncBlock=false;
@@ -134,8 +135,7 @@ temp_var NBinaryOperator::codegen(){
 		emit(OP_MOD, left.codegen(), right.codegen(), t);
 		return t;
 	default:
-		std::cout<<"[COMPILATION FAILED] Invalid operator "<<op<<std::endl;
-		exit(0);
+		fatal("[COMPILATION FAILED] Invalid operator "+get_op(op)+"\n");
 	}
 }
 
@@ -175,10 +175,10 @@ temp_var NVariableDeclaration::codegen(){
 	data_type expr_type;
 	if(hasExpr)
 		expr_type=expr_typecheck(assignmentExpr);
-	if(hasExpr && (get_data_type(type.name)!=expr_type || (get_data_type(type.name)==DOUBLE && expr_type==INT))){
-		std::cout<<"[COMPILATION FAILED] Incompatible assignment\n";
-		exit(0);
-	}
+	if(hasExpr
+		&& (get_data_type(type.name)!=expr_type
+			|| (get_data_type(type.name)==DOUBLE && expr_type==INT)))
+		fatal("[COMPILATION FAILED] Incompatible assignment\n");
 	temp_var p=insert(id.name, VAR, get_data_type(type.name), hasExpr, get_width(get_data_type(type.name)), offset)->id;
 	if(hasExpr)
 		emit(OP_ASSIGN, hasExpr?assignmentExpr->codegen():"", "", p);

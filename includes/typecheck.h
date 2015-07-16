@@ -10,7 +10,7 @@ enum data_type expr_typecheck(NExpression *expr);
 enum data_type eval_binop(enum data_type l, enum data_type r, int op);
 enum data_type get_data_type(std::string id);
 
-inline std::string getOp(int op){
+inline std::string get_op(int op){
 	switch(op){
 		case TCEQ:
 			return "==";

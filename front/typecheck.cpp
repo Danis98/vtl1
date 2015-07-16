@@ -66,12 +66,10 @@ enum data_type expr_typecheck(NExpression *expr){
 }
 
 enum data_type eval_binop(enum data_type l, enum data_type r, int op){
-	if(l==VOID||r==VOID){
-			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
-			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
-		exit(0);
-	}
+	if(l==VOID||r==VOID)
+		fatal("[COMPILATION FAILED] Incompatible operands: {"
+			+data_type_names(l)+","
+			+data_type_names(r)+"} op: "+get_op(op)+"\n");
 	switch(op){
 		//No break or returns, falls through until TCGE
 		case TCEQ:
@@ -86,47 +84,42 @@ enum data_type eval_binop(enum data_type l, enum data_type r, int op){
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
-			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
+			fatal("[COMPILATION FAILED] Incompatible operands: {"
+				+data_type_names(l)+","
+				+data_type_names(r)+"} op: "+get_op(op)+"\n");
 			exit(0);
 		case TMINUS:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
-			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
-			exit(0);
+			fatal("[COMPILATION FAILED] Incompatible operands: {"
+				+data_type_names(l)+","
+				+data_type_names(r)+"} op: "+get_op(op)+"\n");
 		case TMUL:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
-			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
-			exit(0);
+			fatal("[COMPILATION FAILED] Incompatible operands: {"
+				+data_type_names(l)+","
+				+data_type_names(r)+"} op: "+get_op(op)+"\n");
 		case TDIV:
 			if(l==r && l!=STRING)
 				return l;
 			if((l==INT && r==DOUBLE)||(r==INT && l==DOUBLE))
 				return DOUBLE;
-			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
-			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
-			exit(0);
+			fatal("[COMPILATION FAILED] Incompatible operands: {"
+				+data_type_names(l)+","
+				+data_type_names(r)+"} op: "+get_op(op)+"\n");
 		case TMOD:
 			if(l==INT && r==INT)
 				return INT;
-			std::cout<<"[COMPILATION FAILED] Incompatible operands:"
-			<<" {"<<data_type_names(l)<<","
-			<<data_type_names(r)<<"} "<<" op: "<<getOp(op)<<"\n";
-			exit(0);
+			fatal("[COMPILATION FAILED] Incompatible operands: {"
+				+data_type_names(l)+","
+				+data_type_names(r)+"} op: "+get_op(op)+"\n");
 		default:
-			std::cout<<"[COMPILATION FAILED] Operator "<<op<<" undefined\n";
-			exit(0);
+			fatal("[COMPILATION FAILED] Operator "+to_string(op)+" undefined\n");
 	}
 }
 
@@ -141,8 +134,6 @@ enum data_type get_data_type(std::string id){
 		return STRING;
 	else if(id=="void")
 		return VOID;
-	else{
-		std::cout<<"[COMPILATION FAILED] Unknown type "<<id<<std::endl;
-		exit(0);
-	}
+	else
+		fatal("[COMPILATION FAILED] Unknown type "+id+"\n");
 }

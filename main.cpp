@@ -6,6 +6,7 @@
 #include <node.h>
 #include <symbol_table.h>
 #include <typecheck.h>
+#include <utils.h>
 
 using namespace std;
 
@@ -56,10 +57,8 @@ int main(int argc, char **argv){
 	
 	if(file_exists(filename.c_str()))
 		yyin=fopen(filename.c_str(),"r");
-	else{
-		cout<<"[COMPILATION FALED] Source file not found\n";
-		return 0;
-	}
+	else
+		fatal("[COMPILATION FALED] Source file not found\n");
 	
 	filename=filename.substr(0, filename.find_last_of("."));
 	

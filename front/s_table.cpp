@@ -82,8 +82,7 @@ void set_initialized(std::string id){
 	}
 	while(table->parent!=NULL_TABLE);
 		
-	std::cout<<"[COMPILATION FAILED] Undefined symbol "<<id<<"\n";
-	exit(0);
+	fatal("[COMPILATION FAILED] Undefined symbol "+id+"\n");
 }
 
 symbol_table_entry *lookup(std::string id, enum entry_type type){
@@ -109,6 +108,5 @@ symbol_table_entry *lookup(std::string id, enum entry_type type){
 	}
 	while(table.parent!=NULL_TABLE);
 	
-	std::cout<<"[COMPILATION FAILED] Undefined symbol "<<id<<"\n";
-	exit(0);
+	fatal("[COMPILATION FAILED] Undefined symbol "+id+"\n");
 }

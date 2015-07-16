@@ -44,7 +44,7 @@ void NMethodCall::print(int ind){
 
 void NBinaryOperator::print(int ind){
 	do_indentation(ind);
-	cout<<"BINARY OP: "<<getOp(op)<<"\n";
+	cout<<"BINARY OP: "<<get_op(op)<<"\n";
 	left.print(ind+1);
 	right.print(ind+1);
 }

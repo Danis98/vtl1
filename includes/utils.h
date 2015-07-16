@@ -13,4 +13,9 @@ inline std::string to_string (T num){
 	return n;
 }
 
+inline void fatal(std::string msg){
+	std::cout<<msg;
+	exit(0);
+}
+
 #endif
