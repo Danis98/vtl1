@@ -1,5 +1,6 @@
 # vtl1
 Simple compiler for a language called vtl1. It's meant as an exercise and not as an actual usable language.
+vtl1 code is compiled to a simplified form which is then used by a VM, inspired from java.
 
 
 Building and testing
