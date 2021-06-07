@@ -11,4 +11,4 @@ To compile all the programs in the examples/ folder, run test.sh
 Running 
 ---------
 The compiled .vvm programs target the VVM virtual machine, found at this repository: 
-https://github.com/WeirdLionStudios/vvm
+https://github.com/Danis98/vvm
